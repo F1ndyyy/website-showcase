@@ -1,1 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIKBOWLING | Промышленный сервис и аудит боулинг-центров</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+    <!-- Фоновая динамическая сетка и свечение -->
+    <div class="ambient-glow"></div>
+    <div class="bg-grid"></div>
+
+    <!-- Верхняя статусная панель -->
+    <div class="top-bar">
+        <div class="container top-bar-content">
+            <div class="status-indicator">
+                <span class="radar-ping">
+                    <span class="ping-circle"></span>
+                    <span class="dot"></span>
+                </span>
+                <span>Оперативная бригада ТО: <strong>Готова к выезду</strong></span>
+            </div>
+            <div class="top-contacts">
+                <a href="tel:+79990000000" class="top-link">Экстренный выезд: +7 (999) 000-00-00</a>
+                <span class="divider">/</span>
+                <span class="mono-text">service@nikbowling.ru</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Шапка сайта -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="#" class="logo">
+                <div class="logo-mark">NB</div>
+                <div class="logo-text">
+                    <span class="logo-name">NIK<strong>BOWLING</strong></span>
+                    <span class="logo-desc">Инжиниринг и сервис</span>
+                </div>
+            </a>
+            <nav class="nav">
+                <a href="#services" class="nav-link">Узлы оборудования</a>
+                <a href="#brands" class="nav-link">Бренды</a>
+                <a href="#workflow" class="nav-link">Регламент</a>
+                <a href="#request" class="nav-link">Заявка</a>
+            </nav>
+            <a href="#request" class="btn btn-primary btn-glow">Вызвать инженера</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Главный экран (Hero) -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-badge reveal">
+                    <span class="badge-tag">ENGINEERING SERVICE</span>
+                    <span class="badge-text">Превентивная диагностика и ремонт 24/7</span>
+                </div>
+
+                <h1 class="hero-title reveal">
+                    Точная механика.<br>
+                    <span>Стабильная работа</span> дорожек.
+                </h1>
+
+                <p class="hero-lead reveal">
+                    Боулинг — это сложная прецизионная система. Мы устраняем критические неисправности, выполняем тонкую настройку пинсеттеров и продлеваем ресурс оборудования без коммерческих простоев.
+                </p>
+
+                <div class="hero-actions reveal">
+                    <a href="#request" class="btn btn-primary btn-lg btn-glow">Заказать выездной аудит</a>
+                    <a href="#services" class="btn btn-secondary btn-lg">Карта техобслуживания</a>
+                </div>
+
+                <!-- Метрики с анимированным счетчиком -->
+                <div class="specs-grid reveal">
+                    <div class="spec-card">
+                        <div class="spec-num-wrap">
+                            <span class="spec-num" data-target="24">0</span>
+                            <span class="spec-unit">/7</span>
+                        </div>
+                        <div class="spec-title">Экстренное реагирование</div>
+                        <div class="spec-text">Выезд дежурного инженера при остановках дорожек</div>
+                    </div>
+
+                    <div class="spec-card">
+                        <div class="spec-num-wrap">
+                            <span class="spec-num" data-target="99">0</span>
+                            <span class="spec-unit">.8%</span>
+                        </div>
+                        <div class="spec-title">Аптайм дорожек</div>
+                        <div class="spec-text">Средний показатель непрерывной работы центров на контракте</div>
+                    </div>
+
+                    <div class="spec-card">
+                        <div class="spec-num-wrap">
+                            <span class="spec-num" data-target="100">0</span>
+                            <span class="spec-unit">%</span>
+                        </div>
+                        <div class="spec-title">Соблюдение карт ТО</div>
+                        <div class="spec-text">Оригинальные протоколы и технические карты производителей</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Направления ТО -->
+        <section class="section" id="services">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">SERVICES & HARDWARE</span>
+                    <h2>Регламент обслуживания ключевых узлов</h2>
+                    <p>Комплексная работа с механикой, гидравликой, оптикой и программным обеспечением.</p>
+                </div>
+
+                <div class="services-grid">
+                    <!-- Карточка 1 -->
+                    <div class="service-card glow-card reveal">
+                        <div class="card-header">
+                            <span class="card-num">01 / PINSETTERS</span>
+                            <div class="card-status active">Ready</div>
+                        </div>
+                        <h3>Пинсеттеры и пинспоттеры</h3>
+                        <p>Калибровка временных фаз циклов, юстировка стопоров, замена натяжителей, переборка редукторов и устранение застреваний кеглей.</p>
+                        <div class="card-footer-tags">
+                            <span>Brunswick A-2 / GSX</span>
+                            <span>QubicaAMF 82-90</span>
+                            <span>String Machines</span>
+                        </div>
+                    </div>
+
+                    <!-- Карточка 2 -->
+                    <div class="service-card glow-card reveal">
+                        <div class="card-header">
+                            <span class="card-num">02 / BALL RETURN</span>
+                            <div class="card-status active">Ready</div>
+                        </div>
+                        <h3>Системы возврата шаров</h3>
+                        <p>Настройка шароподъемников (Ball Lift), роликовых треков, чистка ремней ускорения, устранение дефектов, вызывающих сколы на шарах.</p>
+                        <div class="card-footer-tags">
+                            <span>Оптодатчики</span>
+                            <span>Демпферы</span>
+                            <span>Электромоторы</span>
+                        </div>
+                    </div>
+
+                    <!-- Карточка 3 -->
+                    <div class="service-card glow-card reveal">
+                        <div class="card-header">
+                            <span class="card-num">03 / LANE CARE</span>
+                            <div class="card-status active">Ready</div>
+                        </div>
+                        <h3>Дорожки и кондиционирование</h3>
+                        <p>Обслуживание и калибровка машин нанесения масла, настройка паттернов, инспекция замковых соединений панелей и фол-линий.</p>
+                        <div class="card-footer-tags">
+                            <span>Kegel Kustodian</span>
+                            <span>Brunswick Envoy</span>
+                            <span>Геометрия</span>
+                        </div>
+                    </div>
+
+                    <!-- Карточка 4 -->
+                    <div class="service-card glow-card reveal">
+                        <div class="card-header">
+                            <span class="card-num">04 / SCORING & IT</span>
+                            <div class="card-status active">Ready</div>
+                        </div>
+                        <h3>Скоринг и электроника</h3>
+                        <p>Диагностика оптических камер фиксации, ремонт плат управления, настройка серверов скоринга и интерфейсов ресепшена.</p>
+                        <div class="card-footer-tags">
+                            <span>Conqueror</span>
+                            <span>Vector Plus</span>
+                            <span>TMS Контроллеры</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Бренды оборудования -->
+        <section class="section section-brands" id="brands">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">COMPATIBILITY</span>
+                    <h2>Поддерживаемое оборудование</h2>
+                </div>
+
+                <div class="brands-marquee reveal">
+                    <div class="brand-pill"><span>BRUNSWICK</span></div>
+                    <div class="brand-pill"><span>QUBICA AMF</span></div>
+                    <div class="brand-pill"><span>KEGEL</span></div>
+                    <div class="brand-pill"><span>VIA BOWLING</span></div>
+                    <div class="brand-pill"><span>STELTRONIC</span></div>
+                    <div class="brand-pill"><span>SWITCH</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Форма заявки -->
+        <section class="section" id="request">
+            <div class="container">
+                <div class="form-wrapper reveal">
+                    <div class="form-info">
+                        <span class="section-tag">DISPATCHER</span>
+                        <h2>Оформить вызов инженерной службы</h2>
+                        <p>Укажите параметры боулинг-центра и характер неисправности. Дежурный инженер зафиксирует задачу и свяжется для согласования выезда.</p>
+
+                        <div class="tech-log">
+                            <div class="log-row">
+                                <span class="log-label">Статус приема заявок:</span>
+                                <span class="log-val text-green">АКТИВЕН</span>
+                            </div>
+                            <div class="log-row">
+                                <span class="log-label">Среднее время ответа:</span>
+                                <span class="log-val">до 15 минут</span>
+                            </div>
+                            <div class="log-row">
+                                <span class="log-label">Телефон диспетчера:</span>
+                                <span class="log-val">+7 (999) 000-00-00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form class="tech-form" id="orderForm">
+                        <div class="input-group">
+                            <label for="company">Название боулинг-центра / Город</label>
+                            <input type="text" id="company" required placeholder="РК «Олимп», Санкт-Петербург">
+                        </div>
+
+                        <div class="form-grid-2">
+                            <div class="input-group">
+                                <label for="phone">Номер телефона</label>
+                                <input type="tel" id="phone" required placeholder="+7 (___) ___-__-__">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="lanes">Количество дорожек</label>
+                                <input type="number" id="lanes" value="8" min="1" max="64">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="equipment">Модель пинсеттеров</label>
+                            <select id="equipment">
+                                <option value="brunswick-gs">Brunswick GS-Series (GS-98, GS-X)</option>
+                                <option value="brunswick-a2">Brunswick A-2</option>
+                                <option value="amf-82">QubicaAMF 82-70 / 82-90</option>
+                                <option value="string">Струнные пинсеттеры (Edge String и др.)</option>
+                                <option value="other">Другая система</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="task">Описание поломки или регламента</label>
+                            <textarea id="task" rows="3" placeholder="Например: периодические сбои при подъеме шара на 3-й и 4-й дорожках..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block btn-glow">
+                            <span>Зарегистрировать заявку</span>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-left">
+                <span class="logo-name">NIK<strong>BOWLING</strong></span>
+                <p>Профессиональный инжиниринг, аудит и регламентное обслуживание боулинг-систем.</p>
+            </div>
+            <div class="footer-right">
+                <span class="mono-text">© 2026 NIKBOWLING. All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
