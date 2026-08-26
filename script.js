@@ -1,46 +1,44 @@
+/**
+ * NIKBOWLING — Инженерная служба
+ */
+const CONFIG = {
+    GOOGLE_TELEGRAM_GATEWAY: 'https://script.google.com/macros/s/AKfycbx8hOmPuHONKmhKfD2J6Xg4ac0XzrYppRIXtnaNyKI48xV9_5K7NeQCFH1P9UrCieH4/exec',
+
+    SUPABASE_URL: 'https://fdvgqonhlvonksbgfkez.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkdmdxb25obHZvbmtzYmdma2V6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MzkyNDEsImV4cCI6MjEwMzMxNTI0MX0.9ZUU-Zka9RbERVTzkeJW4_qcbSW7x9ITHbRnY8D6hS8'
+};
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ================= 1. LOCALSTORAGE & ДАННЫЕ =================
+    // ================= 1. БАЗА ДАННЫХ И ХРАНИЛИЩЕ =================
     const STORAGE_KEY_USER = 'nb_current_user';
     const STORAGE_KEY_ORDERS = 'nb_orders';
+    const STORAGE_KEY_USERS = 'nb_users_local';
 
-    const defaultOrders = [
-        {
-            id: 'ORD-101',
-            userId: 'client_demo',
-            company: 'РК «Арена» (Москва)',
-            phone: '+7 (999) 111-22-33',
-            lanes: '12',
-            equipment: 'Brunswick GS-Series',
-            task: 'Периодический сбой шароподъемника на 4-й дорожке в вечернее время',
-            status: 'new',
-            adminComment: '',
-            createdAt: 'Сегодня, 10:45'
-        },
-        {
-            id: 'ORD-100',
-            userId: 'other_client',
-            company: 'Боулинг-парк «Космос»',
-            phone: '+7 (999) 444-55-66',
-            lanes: '8',
-            equipment: 'QubicaAMF 82-90',
-            task: 'Плановое ТО и регулировка распределителя пинсеттеров',
-            status: 'accepted',
-            adminComment: 'Выезд инженера запланирован на завтра к 11:00',
-            createdAt: 'Вчера, 18:20'
-        }
+    let supabaseClient = null;
+    if (CONFIG.SUPABASE_URL && CONFIG.SUPABASE_ANON_KEY && window.supabase) {
+        supabaseClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+    }
+
+    const defaultUsers = [
+        { id: 'nikita', password: 'admin777', name: 'Никита', role: 'admin' },
+        { id: 'galaktika', password: '1234', name: 'Боулинг «Галактика»', role: 'client' }
     ];
 
-    const getOrders = () => {
-        const stored = localStorage.getItem(STORAGE_KEY_ORDERS);
+    const getLocalUsers = () => {
+        const stored = localStorage.getItem(STORAGE_KEY_USERS);
         if (!stored) {
-            localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(defaultOrders));
-            return defaultOrders;
+            localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(defaultUsers));
+            return defaultUsers;
         }
         return JSON.parse(stored);
     };
 
-    const saveOrders = (orders) => {
+    const getLocalOrders = () => {
+        const stored = localStorage.getItem(STORAGE_KEY_ORDERS);
+        return stored ? JSON.parse(stored) : [];
+    };
+
+    const saveLocalOrders = (orders) => {
         localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(orders));
         renderUI();
     };
@@ -59,7 +57,26 @@ document.addEventListener('DOMContentLoaded', () => {
         renderUI();
     };
 
-    // ================= 2. ЭЛЕМЕНТЫ ИНТЕРФЕЙСА =================
+    // ================= 2. ОТПРАВКА ОПОВЕЩЕНИЙ В TELEGRAM =================
+    async function sendTelegramAlert(order) {
+        if (!CONFIG.GOOGLE_TELEGRAM_GATEWAY) return false;
+
+        try {
+            await fetch(CONFIG.GOOGLE_TELEGRAM_GATEWAY, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(order)
+            });
+            console.log('✓ Заявка передана в Telegram-шлюз');
+            return true;
+        } catch (err) {
+            console.error('Ошибка отправки в Telegram:', err);
+            return false;
+        }
+    }
+
+    // ================= 3. ИНТЕРФЕЙС И ЭЛЕМЕНТЫ =================
     const adminPanel = document.getElementById('adminPanel');
     const adminOrdersList = document.getElementById('adminOrdersList');
     const adminOrdersCount = document.getElementById('adminOrdersCount');
@@ -81,31 +98,136 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeAuthModalBtn = document.getElementById('closeAuthModalBtn');
     const demoAdminBtn = document.getElementById('demoAdminBtn');
     const demoClientBtn = document.getElementById('demoClientBtn');
-    const customAuthForm = document.getElementById('customAuthForm');
+    const authForm = document.getElementById('authForm');
+    const authLogin = document.getElementById('authLogin');
+    const authPassword = document.getElementById('authPassword');
+    const authName = document.getElementById('authName');
+    const authSubmitBtn = document.getElementById('authSubmitBtn');
+    const toggleRegisterBtn = document.getElementById('toggleRegisterBtn');
+    const registerFields = document.getElementById('registerFields');
 
     const clientOrdersModal = document.getElementById('clientOrdersModal');
     const closeClientOrdersBtn = document.getElementById('closeClientOrdersBtn');
     const clientOrdersList = document.getElementById('clientOrdersList');
 
-    // ================= 3. РЕНДЕРИНГ СОСТОЯНИЯ =================
-    const renderUI = () => {
-        const user = getCurrentUser();
-        const orders = getOrders();
+    let isRegisterMode = false;
 
-        // 1. Шапка & Пользователь
+    // ================= 4. АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ =================
+    toggleRegisterBtn.addEventListener('click', () => {
+        isRegisterMode = !isRegisterMode;
+        if (isRegisterMode) {
+            registerFields.style.display = 'flex';
+            authSubmitBtn.textContent = 'Зарегистрироваться';
+            toggleRegisterBtn.textContent = 'У меня есть аккаунт';
+        } else {
+            registerFields.style.display = 'none';
+            authSubmitBtn.textContent = 'Войти';
+            toggleRegisterBtn.textContent = 'Регистрация';
+        }
+    });
+
+    authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const login = authLogin.value.trim().toLowerCase();
+        const password = authPassword.value.trim();
+
+        if (!login || !password) return;
+
+        if (isRegisterMode) {
+            const name = authName.value.trim() || login;
+            const newUser = { id: login, password: password, name: name, role: 'client' };
+
+            if (supabaseClient) {
+                const { error } = await supabaseClient.from('users').insert([newUser]);
+                if (error) {
+                    alert('Логин уже занят или произошла ошибка при регистрации.');
+                    return;
+                }
+            } else {
+                const users = getLocalUsers();
+                if (users.find(u => u.id === login)) {
+                    alert('Такой логин уже существует.');
+                    return;
+                }
+                users.push(newUser);
+                localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
+            }
+
+            setCurrentUser({ id: newUser.id, name: newUser.name, role: newUser.role });
+            authModal.classList.remove('active');
+            authForm.reset();
+        } else {
+            let foundUser = null;
+
+            if (supabaseClient) {
+                const { data } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .eq('id', login)
+                    .eq('password', password)
+                    .single();
+                foundUser = data;
+            }
+
+            if (!foundUser) {
+                const users = getLocalUsers();
+                foundUser = users.find(u => u.id === login && u.password === password);
+            }
+
+            if (foundUser) {
+                setCurrentUser({ id: foundUser.id, name: foundUser.name, role: foundUser.role });
+                authModal.classList.remove('active');
+                authForm.reset();
+            } else {
+                alert('Неверный логин или пароль.');
+            }
+        }
+    });
+
+    demoAdminBtn.addEventListener('click', () => {
+        setCurrentUser({ id: 'nikita', name: 'Никита', role: 'admin' });
+        authModal.classList.remove('active');
+    });
+
+    demoClientBtn.addEventListener('click', () => {
+        setCurrentUser({ id: 'galaktika', name: 'Боулинг «Галактика»', role: 'client' });
+        authModal.classList.remove('active');
+    });
+
+    logoutBtn.addEventListener('click', () => setCurrentUser(null));
+
+    // ================= 5. ПОЛУЧЕНИЕ И ОТОБРАЖЕНИЕ ЗАЯВОК =================
+    async function fetchAllOrders() {
+        if (supabaseClient) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('orders')
+                    .select('*');
+                if (!error && data) return data;
+            } catch (e) {
+                console.error('Ошибка Supabase:', e);
+            }
+        }
+        return getLocalOrders();
+    }
+
+    async function renderUI() {
+        const user = getCurrentUser();
+        const orders = await fetchAllOrders();
+
         if (user) {
             openAuthModalBtn.style.display = 'none';
             userProfileMenu.style.display = 'flex';
             userDisplayName.textContent = user.name;
-            userRoleBadge.textContent = user.role === 'admin' ? 'Инженер' : 'Клиент';
+            userRoleBadge.textContent = user.role === 'admin' ? 'Глав.Инженер' : 'Клиент';
             userAvatarText.textContent = user.name.charAt(0).toUpperCase();
 
-            formUserIndicator.textContent = `${user.name} (${user.role === 'admin' ? 'Инженер' : 'Клиент'})`;
+            formUserIndicator.textContent = `${user.name} (${user.role === 'admin' ? 'Глав.Инженер' : 'Клиент'})`;
             formUserIndicator.className = 'text-green';
 
             if (user.role === 'client') {
                 clientOrdersBtn.style.display = 'inline-block';
-                const myOrders = orders.filter(o => o.userId === user.id);
+                const myOrders = orders.filter(o => o.user_id === user.id);
                 clientOrdersCount.textContent = myOrders.length;
             } else {
                 clientOrdersBtn.style.display = 'none';
@@ -118,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
             formUserIndicator.className = 'text-amber';
         }
 
-        // 2. Верхняя панель диспетчера
         if (user && user.role === 'admin') {
             adminPanel.style.display = 'block';
             const newCount = orders.filter(o => o.status === 'new').length;
@@ -127,9 +248,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             adminPanel.style.display = 'none';
         }
-    };
+    }
 
-    const renderAdminCards = (orders) => {
+    function renderAdminCards(orders) {
         adminOrdersList.innerHTML = '';
 
         if (orders.length === 0) {
@@ -148,19 +269,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             card.innerHTML = `
                 <div class="admin-card-head">
-                    <span class="admin-card-id">${order.id} • ${order.createdAt}</span>
+                    <span class="admin-card-id">${order.id} • ${order.created_at || 'Только что'}</span>
                     <span class="status-tag ${statusClass}">${statusLabel}</span>
                 </div>
                 <div class="admin-card-body">
                     <div><strong>Клуб:</strong> ${order.company} (${order.lanes} дор.)</div>
+                    <div><strong>Клиент (логин):</strong> ${order.user_id || 'Гость'}</div>
                     <div><strong>Тел:</strong> ${order.phone}</div>
-                    <div><strong>Оборудование:</strong> ${order.equipment}</div>
+                    <div><strong>Система:</strong> ${order.equipment}</div>
                     <div style="margin-top: 4px; color: var(--text-main);"><strong>Проблема:</strong> ${order.task}</div>
                 </div>
 
-                ${order.adminComment ? `<div class="engineer-note"><strong>Ответ:</strong> ${order.adminComment}</div>` : ''}
+                ${order.admin_comment ? `<div class="engineer-note"><strong>Ответ Глав.Инженера:</strong> ${order.admin_comment}</div>` : ''}
 
-                <input type="text" class="admin-comment-input" placeholder="Примечание/время выезда..." id="comment_${order.id}" value="${order.adminComment || ''}">
+                <input type="text" class="admin-comment-input" placeholder="Примечание/время выезда..." id="comment_${order.id}" value="${order.admin_comment || ''}">
 
                 <div class="admin-btn-row">
                     <button class="btn btn-sm btn-success" onclick="window.setOrderStatus('${order.id}', 'accepted')">✓ Принять</button>
@@ -170,71 +292,48 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             adminOrdersList.appendChild(card);
         });
-    };
+    }
 
-    // Глобальные методы управления заявками
-    window.setOrderStatus = (orderId, newStatus) => {
-        const orders = getOrders();
+    window.setOrderStatus = async (orderId, newStatus) => {
         const input = document.getElementById(`comment_${orderId}`);
         const comment = input ? input.value.trim() : '';
 
-        const updated = orders.map(o => {
-            if (o.id === orderId) {
-                return { ...o, status: newStatus, adminComment: comment };
-            }
-            return o;
-        });
-        saveOrders(updated);
+        if (supabaseClient) {
+            await supabaseClient
+                .from('orders')
+                .update({ status: newStatus, admin_comment: comment })
+                .eq('id', orderId);
+        } else {
+            const orders = getLocalOrders().map(o => {
+                if (o.id === orderId) {
+                    return { ...o, status: newStatus, admin_comment: comment };
+                }
+                return o;
+            });
+            saveLocalOrders(orders);
+        }
+        renderUI();
     };
 
-    window.removeOrder = (orderId) => {
+    window.removeOrder = async (orderId) => {
         if (confirm(`Удалить заявку ${orderId}?`)) {
-            const orders = getOrders().filter(o => o.id !== orderId);
-            saveOrders(orders);
+            if (supabaseClient) {
+                await supabaseClient.from('orders').delete().eq('id', orderId);
+            } else {
+                const orders = getLocalOrders().filter(o => o.id !== orderId);
+                saveLocalOrders(orders);
+            }
+            renderUI();
         }
     };
 
-    // ================= 4. ОБРАБОТЧИКИ СОБЫТИЙ =================
-    // Сворачивание админ-дока
-    if (toggleAdminViewBtn) {
-        toggleAdminViewBtn.addEventListener('click', () => {
-            adminOrdersBody.classList.toggle('collapsed');
-            const isCollapsed = adminOrdersBody.classList.contains('collapsed');
-            toggleAdminIcon.textContent = isCollapsed ? '▲' : '▼';
-            toggleAdminViewBtn.innerHTML = `<span id="toggleAdminIcon">${isCollapsed ? '▲' : '▼'}</span> ${isCollapsed ? 'Развернуть реестр' : 'Свернуть реестр'}`;
-        });
-    }
-
-    // Модалка авторизации
-    openAuthModalBtn.addEventListener('click', () => authModal.classList.add('active'));
-    closeAuthModalBtn.addEventListener('click', () => authModal.classList.remove('active'));
-
-    demoAdminBtn.addEventListener('click', () => {
-        setCurrentUser({ id: 'admin_nik', name: 'Дежурный инженер', role: 'admin' });
-        authModal.classList.remove('active');
-    });
-
-    demoClientBtn.addEventListener('click', () => {
-        setCurrentUser({ id: 'client_demo', name: 'РК «Арена»', role: 'client' });
-        authModal.classList.remove('active');
-    });
-
-    customAuthForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = document.getElementById('authName').value.trim();
-        const role = document.getElementById('authRole').value;
-        setCurrentUser({ id: 'user_' + Date.now(), name: name, role: role });
-        authModal.classList.remove('active');
-    });
-
-    logoutBtn.addEventListener('click', () => setCurrentUser(null));
-
-    // Модалка истории заявок клиента
-    clientOrdersBtn.addEventListener('click', () => {
+    // ================= 6. ОКНО ЗАЯВОК КЛИЕНТА =================
+    clientOrdersBtn.addEventListener('click', async () => {
         const user = getCurrentUser();
         if (!user) return;
 
-        const myOrders = getOrders().filter(o => o.userId === user.id);
+        const allOrders = await fetchAllOrders();
+        const myOrders = allOrders.filter(o => o.user_id === user.id);
         clientOrdersList.innerHTML = '';
 
         if (myOrders.length === 0) {
@@ -246,17 +345,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let statusLabel = 'На рассмотрении';
                 let statusClass = 'status-new';
-                if (order.status === 'accepted') { statusLabel = 'Принята инженером'; statusClass = 'status-accepted'; }
+                if (order.status === 'accepted') { statusLabel = 'Принята в работу'; statusClass = 'status-accepted'; }
                 if (order.status === 'rejected') { statusLabel = 'Отклонена'; statusClass = 'status-rejected'; }
 
                 item.innerHTML = `
                     <div class="client-order-head">
-                        <span style="font-family: var(--font-mono); color: var(--accent); font-weight: 700;">${order.id} • ${order.createdAt}</span>
+                        <span style="font-family: var(--font-mono); color: var(--accent); font-weight: 700;">${order.id} • ${order.created_at || 'Только что'}</span>
                         <span class="status-tag ${statusClass}">${statusLabel}</span>
                     </div>
-                    <div style="font-size: 14px; margin-bottom: 4px;"><strong>Оборудование:</strong> ${order.equipment} (${order.lanes} дор.)</div>
+                    <div style="font-size: 14px; margin-bottom: 4px;"><strong>Оборудование/ПО:</strong> ${order.equipment} (${order.lanes} дор.)</div>
                     <div style="font-size: 13px; color: var(--text-muted);"><strong>Проблема:</strong> ${order.task}</div>
-                    ${order.adminComment ? `<div class="engineer-note"><strong>Ответ службы ТО:</strong> ${order.adminComment}</div>` : ''}
+                    ${order.admin_comment ? `<div class="engineer-note"><strong>Ответ Глав.Инженера:</strong> ${order.admin_comment}</div>` : ''}
                 `;
                 clientOrdersList.appendChild(item);
             });
@@ -264,19 +363,12 @@ document.addEventListener('DOMContentLoaded', () => {
         clientOrdersModal.classList.add('active');
     });
 
-    closeClientOrdersBtn.addEventListener('click', () => clientOrdersModal.classList.remove('active'));
-
-    // Закрытие окон по клику на фон
-    [authModal, clientOrdersModal].forEach(modal => {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) modal.classList.remove('active');
-        });
-    });
-
-    // ================= 5. ОТПРАВКА НОВОЙ ЗАЯВКИ =================
+    // ================= 7. ОТПРАВКА ЗАЯВКИ С ФОРМЫ =================
     const orderForm = document.getElementById('orderForm');
+    const submitBtn = document.getElementById('submitOrderBtn');
+
     if (orderForm) {
-        orderForm.addEventListener('submit', (e) => {
+        orderForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const user = getCurrentUser();
@@ -286,29 +378,73 @@ document.addEventListener('DOMContentLoaded', () => {
             const equipment = document.getElementById('equipment').value;
             const task = document.getElementById('task').value.trim();
 
+            const dateStr = new Date().toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+
             const newOrder = {
                 id: 'ORD-' + Math.floor(100 + Math.random() * 900),
-                userId: user ? user.id : 'guest_' + Date.now(),
+                user_id: user ? user.id : 'guest',
                 company: company,
                 phone: phone,
                 lanes: lanes,
                 equipment: equipment,
                 task: task,
                 status: 'new',
-                adminComment: '',
-                createdAt: 'Только что'
+                admin_comment: '',
+                created_at: dateStr
             };
 
-            const orders = getOrders();
-            orders.unshift(newOrder);
-            saveOrders(orders);
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>Регистрация заявки...</span>';
+            }
 
-            alert(`✓ Заявка ${newOrder.id} успешно передана в реестр диспетчерской службы.`);
+            if (supabaseClient) {
+                try {
+                    await supabaseClient.from('orders').insert([newOrder]);
+                } catch (err) {
+                    console.error('Ошибка базы данных:', err);
+                }
+            } else {
+                const orders = getLocalOrders();
+                orders.unshift(newOrder);
+                saveLocalOrders(orders);
+            }
+
+            await sendTelegramAlert(newOrder);
+
+            alert(`✓ Заявка ${newOrder.id} успешно передана Главному Инженеру!`);
             orderForm.reset();
+
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>Отправить заявку Главному Инженеру</span>';
+            }
+
+            renderUI();
         });
     }
 
-    // ================= 6. СКРОЛЛ, ЧИСЛА И ЧАТ =================
+    // ================= 8. НАВИГАЦИЯ И МОДАЛКИ =================
+    if (toggleAdminViewBtn) {
+        toggleAdminViewBtn.addEventListener('click', () => {
+            adminOrdersBody.classList.toggle('collapsed');
+            const isCollapsed = adminOrdersBody.classList.contains('collapsed');
+            toggleAdminIcon.textContent = isCollapsed ? '▲' : '▼';
+            toggleAdminViewBtn.innerHTML = `<span id="toggleAdminIcon">${isCollapsed ? '▲' : '▼'}</span> ${isCollapsed ? 'Развернуть реестр' : 'Свернуть реестр'}`;
+        });
+    }
+
+    openAuthModalBtn.addEventListener('click', () => authModal.classList.add('active'));
+    closeAuthModalBtn.addEventListener('click', () => authModal.classList.remove('active'));
+    closeClientOrdersBtn.addEventListener('click', () => clientOrdersModal.classList.remove('active'));
+
+    [authModal, clientOrdersModal].forEach(modal => {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('active');
+        });
+    });
+
+    // ================= 9. АНИМАЦИИ =================
     const revealEls = document.querySelectorAll('.reveal');
     if (revealEls.length > 0) {
         const obs = new IntersectionObserver((entries) => {
@@ -339,47 +475,5 @@ document.addEventListener('DOMContentLoaded', () => {
         statsObs.observe(statsSec);
     }
 
-    const chatWidget = document.getElementById('chatWidget');
-    const chatToggleBtn = document.getElementById('chatToggleBtn');
-    const chatCloseBtn = document.getElementById('chatCloseBtn');
-    const chatForm = document.getElementById('chatForm');
-    const chatInput = document.getElementById('chatInput');
-    const chatMessages = document.getElementById('chatMessages');
-    const quickReplies = document.getElementById('quickReplies');
-
-    if (chatToggleBtn) chatToggleBtn.addEventListener('click', () => chatWidget.classList.toggle('open'));
-    if (chatCloseBtn) chatCloseBtn.addEventListener('click', () => chatWidget.classList.remove('open'));
-
-    const addChatMsg = (text, sender = 'bot') => {
-        const msg = document.createElement('div');
-        msg.className = `message msg-${sender}`;
-        msg.innerHTML = `<div class="msg-bubble">${text}</div><span class="msg-time">Только что</span>`;
-        chatMessages.appendChild(msg);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    };
-
-    if (chatForm) {
-        chatForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const val = chatInput.value.trim();
-            if (!val) return;
-            addChatMsg(val, 'user');
-            chatInput.value = '';
-            setTimeout(() => addChatMsg('Информация зафиксирована. Вы также можете оставить официальную заявку в форме ниже.', 'bot'), 600);
-        });
-    }
-
-    if (quickReplies) {
-        quickReplies.addEventListener('click', (e) => {
-            const btn = e.target.closest('.quick-btn');
-            if (btn) {
-                const text = btn.getAttribute('data-text');
-                addChatMsg(text, 'user');
-                setTimeout(() => addChatMsg('Дежурный инженер принял обращение. Вы можете оформить заявку на сайте.', 'bot'), 600);
-            }
-        });
-    }
-
-    // Инициализация при старте
     renderUI();
 });

@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIKBOWLING | Промышленный сервис и аудит боулинг-центров</title>
+    <title>NIKBOWLING | Сервис боулинга QubicaAMF, VIA Bowling и систем Steltronic</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- Supabase JS SDK для подключения облачной базы данных -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-    <!-- Фоновые эффекты -->
     <div class="ambient-glow"></div>
     <div class="bg-grid"></div>
 
-    <!-- ВЕРХНЯЯ ЗАКРЕПЛЕННАЯ ПАНЕЛЬ ИНЖЕНЕРА / АДМИНА -->
+    <!-- ВЕРХНЯЯ ЗАКРЕПЛЕННАЯ ПАНЕЛЬ ИНЖЕНЕРА (Видна только для роли admin) -->
     <div class="admin-dock" id="adminPanel" style="display: none;">
         <div class="admin-dock-inner">
             <div class="admin-dock-header">
@@ -33,9 +34,7 @@
             </div>
 
             <div class="admin-dock-content" id="adminOrdersBody">
-                <div class="admin-orders-grid" id="adminOrdersList">
-                    <!-- Заявки генерируются через script.js -->
-                </div>
+                <div class="admin-orders-grid" id="adminOrdersList"></div>
             </div>
         </div>
     </div>
@@ -44,20 +43,16 @@
     <header class="header">
         <div class="container header-content">
             <a href="#" class="logo">
-                <div class="logo-box">NB</div>
-                <div class="logo-text-group">
-                    <span class="logo-brand">NIK<strong>BOWLING</strong></span>
-                    <span class="logo-sub">Engineering & Technical Service</span>
-                </div>
+                <img src="logo.png" alt="NIKBOWLING" class="logo-img">
             </a>
 
             <nav class="nav">
                 <a href="#services" class="nav-item">Узлы оборудования</a>
-                <a href="#brands" class="nav-item">Бренды</a>
+                <a href="#specialization" class="nav-item">Специализация</a>
+                <a href="#contacts" class="nav-item">Контакты инженера</a>
                 <a href="#request" class="nav-item">Оставить заявку</a>
             </nav>
 
-            <!-- Блок профиля и кнопки входа -->
             <div class="header-auth">
                 <button class="btn btn-auth" id="openAuthModalBtn">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -83,43 +78,44 @@
     </header>
 
     <main>
-        <!-- Главный экран (Hero) -->
+        <!-- Главный экран с фоновым изображением боулинга -->
         <section class="hero">
-            <div class="container">
+            <div class="hero-overlay"></div>
+            <div class="container hero-container">
                 <div class="hero-tag reveal">
                     <span class="tag-dot"></span>
-                    <span>Инженерная служба быстрого реагирования</span>
+                    <span>Специализированный сервис QubicaAMF и VIA Bowling</span>
                 </div>
 
                 <h1 class="hero-heading reveal">
-                    Промышленный сервис.<br>
-                    <span>Безаварийная работа</span> боулинг-центров.
+                    Профессиональный ремонт.<br>
+                    <span>Бесперебойная работа</span> дорожек.
                 </h1>
 
                 <p class="hero-description reveal">
-                    Полный регламент обслуживания пинсеттеров, систем возврата шаров, скоринг-электроники и синтетического полотна дорожек. Мгновенная фиксация поломок в системе диспетчеризации.
+                    Инженерное обслуживание боулинг-систем <strong>QubicaAMF</strong> и <strong>VIA Bowling</strong>, а также тонкая настройка и сопровождение программ подсчета очков <strong>Steltronic</strong>.
                 </p>
 
                 <div class="hero-btns reveal">
                     <a href="#request" class="btn btn-primary btn-glow">Подать заявку на ТО</a>
-                    <a href="#services" class="btn btn-secondary">Каталог оборудования</a>
+                    <a href="#contacts" class="btn btn-secondary">Связаться с Глав.Инженером</a>
                 </div>
 
                 <div class="stats-row reveal">
                     <div class="stat-card">
                         <div class="stat-digit"><span class="spec-num" data-target="24">0</span><span class="stat-unit">/7</span></div>
-                        <div class="stat-title">Экстренный выезд</div>
-                        <div class="stat-sub">Ликвидация сбоев в часы коммерческой загрузки</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-digit"><span class="spec-num" data-target="99">0</span><span class="stat-unit">.9%</span></div>
-                        <div class="stat-title">Аптайм дорожек</div>
-                        <div class="stat-sub">Коэффициент готовности у клубов на контракте</div>
+                        <div class="stat-title">Оперативный выезд</div>
+                        <div class="stat-sub">Экстренный ремонт при остановках дорожек</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-digit"><span class="spec-num" data-target="100">0</span><span class="stat-unit">%</span></div>
-                        <div class="stat-title">Технические карты</div>
-                        <div class="stat-sub">Соблюдение заводских стандартов производителей</div>
+                        <div class="stat-title">Фокус на 2 брендах</div>
+                        <div class="stat-sub">Глубокое знание узлов QubicaAMF и VIA Bowling</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-digit"><span class="spec-num" data-target="0">0</span><span class="stat-unit"> сбоев</span></div>
+                        <div class="stat-title">ПО Steltronic</div>
+                        <div class="stat-sub">Точная синхронизация скоринга и камер кеглей</div>
                     </div>
                 </div>
             </div>
@@ -129,107 +125,131 @@
         <section class="section" id="services">
             <div class="container">
                 <div class="section-title-wrap reveal">
-                    <span class="section-kicker">SERVICES & HARDWARE</span>
-                    <h2>Регламент обслуживания ключевых узлов</h2>
-                    <p>Комплексная работа с механикой, гидравликой, оптикой и программным обеспечением.</p>
+                    <span class="section-kicker">ТЕХНИЧЕСКИЙ РЕГЛАМЕНТ</span>
+                    <h2>Обслуживаемые узлы и программные модули</h2>
+                    <p>Комплексная работа с механикой, шароподъемниками и скорингом.</p>
                 </div>
 
                 <div class="services-grid">
                     <div class="service-card reveal">
                         <div class="card-top">
                             <span class="card-index">01 / PINSETTERS</span>
-                            <span class="card-status-pill">АКТИВНО</span>
+                            <span class="card-status-pill">СПЕЦИАЛИЗАЦИЯ</span>
                         </div>
-                        <h3>Пинсеттеры и пинспоттеры</h3>
-                        <p>Калибровка фаз циклов, замена натяжителей цепей, переборка редукторов, настройка стопоров и предотвращение застреваний кеглей.</p>
+                        <h3>Пинсеттеры QubicaAMF & VIA</h3>
+                        <p>Настройка шасси, распределителей кеглей, регулировка стопоров, замена натяжителей цепей, устранение застреваний и переборка редукторов.</p>
                         <div class="card-tags">
-                            <span>Brunswick GSX / A-2</span>
-                            <span>QubicaAMF 82-90</span>
-                            <span>String Machines</span>
+                            <span>QubicaAMF 82-70 / 82-90</span>
+                            <span>VIA Bowling</span>
+                            <span>Edge String</span>
                         </div>
                     </div>
 
                     <div class="service-card reveal">
                         <div class="card-top">
                             <span class="card-index">02 / BALL RETURN</span>
-                            <span class="card-status-pill">АКТИВНО</span>
+                            <span class="card-status-pill">МЕХАНИКА</span>
                         </div>
-                        <h3>Системы возврата шаров</h3>
-                        <p>Наладка шароподъемников (Ball Lift), роликовых путей, чистка ремней ускорения, устранение дефектов, вызывающих сколы и повреждения шаров.</p>
+                        <h3>Возврат шаров и подъемники</h3>
+                        <p>Профилактика шароподъемников (Ball Lift), роликовых треков, чистка ремней ускорения и демпферов, защита шаров от сколов.</p>
                         <div class="card-tags">
-                            <span>Подъемники</span>
+                            <span>Трассы возврата</span>
                             <span>Оптодатчики</span>
-                            <span>Демпферы</span>
+                            <span>Моторы подачи</span>
                         </div>
                     </div>
 
                     <div class="service-card reveal">
                         <div class="card-top">
-                            <span class="card-index">03 / LANE CARE</span>
-                            <span class="card-status-pill">АКТИВНО</span>
+                            <span class="card-index">03 / SCORING & SOFTWARE</span>
+                            <span class="card-status-pill">ПРОГРАММА ПОДСЧЕТА</span>
                         </div>
-                        <h3>Дорожки и кондиционирование</h3>
-                        <p>Обслуживание и калибровка машин нанесения масла, расчет диаграмм распределения, инспекция замковых соединений синтетических панелей.</p>
+                        <h3>Система подсчета очков Steltronic</h3>
+                        <p>Полная настройка и обслуживание программного комплекса Steltronic: калибровка камер фиксации кеглей, сетевая синхронизация, табло дорожек и ресепшн.</p>
                         <div class="card-tags">
-                            <span>Kegel Kustodian</span>
-                            <span>Brunswick Envoy</span>
-                            <span>Геометрия</span>
+                            <span>ПО Steltronic</span>
+                            <span>Камеры кеглей</span>
+                            <span>TMS Контроллеры</span>
                         </div>
                     </div>
 
                     <div class="service-card reveal">
                         <div class="card-top">
-                            <span class="card-index">04 / SCORING & IT</span>
-                            <span class="card-status-pill">АКТИВНО</span>
+                            <span class="card-index">04 / PREVENTIVE CARE</span>
+                            <span class="card-status-pill">РЕГЛАМЕНТ</span>
                         </div>
-                        <h3>Скоринг и электроника</h3>
-                        <p>Диагностика оптических камер фиксации кеглей, ремонт контроллеров TMS, настройка серверов скоринга и интерфейсов ресепшена.</p>
+                        <h3>Плановое ТО и аудит</h3>
+                        <p>Периодическая протяжка, смазка механических соединений, дефектовка изношенных деталей и предотвращение аварийных остановок дорожек.</p>
                         <div class="card-tags">
-                            <span>Conqueror</span>
-                            <span>Vector Plus</span>
-                            <span>TMS Серверы</span>
+                            <span>Карты ТО</span>
+                            <span>Дефектовка</span>
+                            <span>Снижение износа</span>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Бренды -->
-        <section class="section section-dark" id="brands">
+        <!-- Блок специализации -->
+        <section class="section section-dark" id="specialization">
             <div class="container">
                 <div class="section-title-wrap reveal">
-                    <span class="section-kicker">COMPATIBILITY</span>
-                    <h2>Поддерживаемое оборудование</h2>
+                    <span class="section-kicker">ПРОФИЛЬ РАБОТ</span>
+                    <h2>Наш стек оборудования и ПО</h2>
                 </div>
 
                 <div class="brands-grid reveal">
-                    <div class="brand-item">BRUNSWICK</div>
-                    <div class="brand-item">QUBICA AMF</div>
-                    <div class="brand-item">KEGEL</div>
-                    <div class="brand-item">VIA BOWLING</div>
-                    <div class="brand-item">STELTRONIC</div>
-                    <div class="brand-item">SWITCH</div>
+                    <div class="brand-item">
+                        <span class="brand-type">Оборудование</span>
+                        QUBICA AMF
+                    </div>
+                    <div class="brand-item">
+                        <span class="brand-type">Оборудование</span>
+                        VIA BOWLING
+                    </div>
+                    <div class="brand-item brand-highlight">
+                        <span class="brand-type">Программа подсчета очков</span>
+                        STELTRONIC
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Форма заявки -->
+        <!-- Блок Главного Инженера и Форма -->
         <section class="section" id="request">
             <div class="container">
-                <div class="form-box reveal">
+                <div class="form-box reveal" id="contacts">
                     <div class="form-box-side">
-                        <span class="section-kicker">DISPATCH DESK</span>
-                        <h2>Оформить заявку в реестр ТО</h2>
-                        <p>Заполните параметры клуба. Заявка мгновенно передается в единый журнал дежурного инженера.</p>
+                        <span class="section-kicker">ПРЯМОЙ КОНТАКТ</span>
+                        <h2>Техническая служба NIKBOWLING</h2>
+                        <p>По всем вопросам планового обслуживания, аварийных выездов и настройки систем подсчета очков Steltronic:</p>
+
+                        <!-- Карточка Главного Инженера -->
+                        <div class="engineer-lead-card">
+                            <div class="engineer-role-tag">Глав.Инженер</div>
+                            <div class="engineer-name-row">
+                                <span class="engineer-name-highlight">Никита</span>
+                            </div>
+                            <div class="engineer-direct-contacts">
+                                <a href="tel:+79852895450" class="contact-link">
+                                    <span class="contact-icon">📞</span>
+                                    <span>+7 985 289 54 50</span>
+                                </a>
+                                <a href="https://t.me/Yakovlevofficial1" target="_blank" rel="noopener" class="contact-link telegram-link">
+                                    <span class="contact-icon">✈️</span>
+                                    <span>Telegram: @Yakovlevofficial1</span>
+                                </a>
+                            </div>
+                        </div>
 
                         <div class="status-summary-card">
                             <div class="summary-line">
-                                <span>Текущий статус:</span>
+                                <span>Текущий профиль:</span>
                                 <strong class="text-amber" id="formUserIndicator">Гость (вход не выполнен)</strong>
                             </div>
                             <div class="summary-line">
-                                <span>Канал передачи:</span>
-                                <strong class="text-green">Штатный реестр ТО</strong>
+                                <span>Специализация:</span>
+                                <strong class="text-green">QubicaAMF • VIA • Steltronic</strong>
                             </div>
                         </div>
                     </div>
@@ -237,7 +257,7 @@
                     <form class="main-form" id="orderForm">
                         <div class="form-field">
                             <label for="company">Боулинг-центр / Город</label>
-                            <input type="text" id="company" required placeholder="Например: РК «Арена», г. Москва">
+                            <input type="text" id="company" required placeholder="Например: РК «Космос», г. Москва">
                         </div>
 
                         <div class="form-row-2">
@@ -252,23 +272,22 @@
                         </div>
 
                         <div class="form-field">
-                            <label for="equipment">Модель пинсеттеров</label>
+                            <label for="equipment">Оборудование / ПО</label>
                             <select id="equipment">
-                                <option value="Brunswick GS-Series">Brunswick GS-Series (GS-98, GS-X)</option>
-                                <option value="Brunswick A-2">Brunswick A-2</option>
-                                <option value="QubicaAMF 82-90">QubicaAMF 82-70 / 82-90</option>
-                                <option value="Струнные машины (Edge)">Струнные пинсеттеры (Edge String и др.)</option>
-                                <option value="Другое оборудование">Другой производитель</option>
+                                <option value="QubicaAMF (82-70 / 82-90)">QubicaAMF (82-70 / 82-90 / Edge)</option>
+                                <option value="VIA Bowling">VIA Bowling</option>
+                                <option value="ПО Steltronic (Скоринг)">Программа подсчета очков Steltronic</option>
+                                <option value="Комплекс (Оборудование + ПО)">Комплекс (Оборудование + ПО Steltronic)</option>
                             </select>
                         </div>
 
                         <div class="form-field">
-                            <label for="task">Описание поломки или задачи</label>
-                            <textarea id="task" rows="3" required placeholder="Опишите симптомы неисправности или дату для планового выезда..."></textarea>
+                            <label for="task">Описание задачи или неисправности</label>
+                            <textarea id="task" rows="3" required placeholder="Опишите симптомы сбоя механики или вопрос по скорингу Steltronic..."></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-block btn-glow">
-                            <span>Зарегистрировать заявку</span>
+                        <button type="submit" class="btn btn-primary btn-block btn-glow" id="submitOrderBtn">
+                            <span>Отправить заявку Главному Инженеру</span>
                         </button>
                     </form>
                 </div>
@@ -276,50 +295,58 @@
         </section>
     </main>
 
-    <!-- МОДАЛЬНОЕ ОКНО АВТОРИЗАЦИИ (ВХОД / ДЕМО) -->
+    <!-- МОДАЛЬНОЕ ОКНО АВТОРИЗАЦИИ И РЕГИСТРАЦИИ -->
     <div class="modal-layer" id="authModal">
         <div class="modal-box">
             <button class="modal-exit-btn" id="closeAuthModalBtn">✕</button>
             <div class="modal-head">
-                <h3>Вход в систему NIKBOWLING</h3>
-                <p>Выберите профиль для проверки функций или введите произвольные данные</p>
+                <h3>Вход в личный кабинет</h3>
+                <p>Единая система для боулинг-центров и инженерной службы</p>
             </div>
 
             <div class="demo-select-box">
-                <span class="demo-label">Быстрый тестовый вход в 1 клик:</span>
+                <span class="demo-label">Быстрый вход для проверки:</span>
                 <div class="demo-btn-grid">
                     <button class="btn-demo-card" id="demoAdminBtn">
                         <div class="demo-card-icon admin-icon">⚡</div>
                         <div>
-                            <strong>Инженер / Диспетчер</strong>
-                            <span>Доступ к верхней панели управления</span>
+                            <strong>Глав.Инженер Никита</strong>
+                            <span>Логин: nikita • Пароль: admin777</span>
                         </div>
                     </button>
                     <button class="btn-demo-card" id="demoClientBtn">
                         <div class="demo-card-icon client-icon">🏢</div>
                         <div>
-                            <strong>Клиент (РК «Арена»)</strong>
-                            <span>Отправка и отслеживание своих заявок</span>
+                            <strong>БК «Галактика» (Клиент)</strong>
+                            <span>Логин: galaktika • Пароль: 1234</span>
                         </div>
                     </button>
                 </div>
             </div>
 
-            <div class="modal-hr"><span>или произвольный логин</span></div>
+            <div class="modal-hr"><span>или войдите по логину</span></div>
 
-            <form id="customAuthForm" class="auth-fields">
+            <form id="authForm" class="auth-fields">
                 <div class="form-field">
-                    <label for="authName">Имя / Название заведения</label>
-                    <input type="text" id="authName" placeholder="Например: Боулинг-центр «Шар»" required>
+                    <label for="authLogin">Логин</label>
+                    <input type="text" id="authLogin" placeholder="Например: arena_club" required autocomplete="username">
                 </div>
                 <div class="form-field">
-                    <label for="authRole">Роль пользователя</label>
-                    <select id="authRole">
-                        <option value="client">Клиент (Представитель клуба)</option>
-                        <option value="admin">Инженер / Администратор ТО</option>
-                    </select>
+                    <label for="authPassword">Пароль</label>
+                    <input type="password" id="authPassword" placeholder="••••••••" required autocomplete="current-password">
                 </div>
-                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 8px;">Войти</button>
+
+                <div id="registerFields" style="display: none; flex-direction: column; gap: 14px;">
+                    <div class="form-field">
+                        <label for="authName">Название заведения / Ваше имя</label>
+                        <input type="text" id="authName" placeholder="РК «Арена», г. Москва">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;" id="authSubmitBtn">Войти</button>
+                    <button type="button" class="btn btn-secondary" id="toggleRegisterBtn">Регистрация</button>
+                </div>
             </form>
         </div>
     </div>
@@ -330,53 +357,9 @@
             <button class="modal-exit-btn" id="closeClientOrdersBtn">✕</button>
             <div class="modal-head">
                 <h3>История ваших заявок на обслуживание</h3>
-                <p>Текущий статус рассмотрения и примечания дежурной службы</p>
+                <p>Текущий статус рассмотрения и примечания Главного Инженера</p>
             </div>
-            <div class="client-orders-scroll" id="clientOrdersList">
-                <!-- Генерируется через script.js -->
-            </div>
-        </div>
-    </div>
-
-    <!-- ЧАТ ПОДДЕРЖКИ -->
-    <div class="chat-widget" id="chatWidget">
-        <button class="chat-toggle-btn" id="chatToggleBtn" type="button" aria-label="Открыть чат поддержки">
-            <span class="chat-badge">1</span>
-            <svg class="icon-chat" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-            <span class="icon-close">✕</span>
-        </button>
-
-        <div class="chat-window" id="chatWindow">
-            <div class="chat-header">
-                <div class="chat-person">
-                    <div class="chat-avatar">NB<span class="online-indicator"></span></div>
-                    <div>
-                        <div class="chat-name">Инженер NIKBOWLING</div>
-                        <div class="chat-desc">Дежурная служба на связи</div>
-                    </div>
-                </div>
-                <button class="chat-close" id="chatCloseBtn" type="button">✕</button>
-            </div>
-
-            <div class="chat-messages" id="chatMessages">
-                <div class="message msg-bot">
-                    <div class="msg-bubble">Здравствуйте! Чем помочь по работе оборудования боулинг-центра?</div>
-                    <span class="msg-time">Только что</span>
-                </div>
-            </div>
-
-            <div class="chat-quick-replies" id="quickReplies">
-                <button type="button" class="quick-btn" data-text="Срочный ремонт (остановка дорожки)">🚨 Срочный ремонт</button>
-                <button type="button" class="quick-btn" data-text="Сколько стоит плановое ТО?">💰 Стоимость ТО</button>
-                <button type="button" class="quick-btn" data-text="Как вызвать инженера на аудит?">🛠️ Выезд инженера</button>
-            </div>
-
-            <form class="chat-input-row" id="chatForm">
-                <input type="text" id="chatInput" placeholder="Опишите вопрос..." autocomplete="off">
-                <button type="submit" class="chat-send-btn" aria-label="Отправить">➤</button>
-            </form>
+            <div class="client-orders-scroll" id="clientOrdersList"></div>
         </div>
     </div>
 
@@ -384,10 +367,10 @@
         <div class="container footer-row">
             <div class="footer-copy">
                 <span class="logo-brand">NIK<strong>BOWLING</strong></span>
-                <p>Профессиональный инжиниринг, аудит и регламентное обслуживание боулинг-систем.</p>
+                <p>Профессиональный сервис боулинга <strong>VIA Bowling</strong>, <strong>QubicaAMF</strong> и программ подсчета очков <strong>Steltronic</strong>.</p>
             </div>
             <div class="footer-meta">
-                <span>© 2026 NIKBOWLING. All rights reserved.</span>
+                <span>Глав.Инженер: <strong style="color: var(--red);">Никита</strong> (+7 985 289 54 50)</span>
             </div>
         </div>
     </footer>
