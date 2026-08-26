@@ -11,45 +11,74 @@
 </head>
 <body>
 
-    <!-- Фоновая динамическая сетка и свечение -->
+    <!-- Фоновые эффекты -->
     <div class="ambient-glow"></div>
     <div class="bg-grid"></div>
 
-    <!-- Верхняя статусная панель -->
-    <div class="top-bar">
-        <div class="container top-bar-content">
-            <div class="status-indicator">
-                <span class="radar-ping">
-                    <span class="ping-circle"></span>
-                    <span class="dot"></span>
-                </span>
-                <span>Оперативная бригада ТО: <strong>Готова к выезду</strong></span>
+    <!-- ВЕРХНЯЯ ЗАКРЕПЛЕННАЯ ПАНЕЛЬ ИНЖЕНЕРА / АДМИНА -->
+    <div class="admin-dock" id="adminPanel" style="display: none;">
+        <div class="admin-dock-inner">
+            <div class="admin-dock-header">
+                <div class="admin-title-group">
+                    <span class="pulse-indicator"></span>
+                    <span class="admin-dock-badge">DISPATCHER DESK</span>
+                    <span class="admin-dock-title">Реестр входящих заявок</span>
+                    <span class="badge-counter" id="adminOrdersCount">0 новых</span>
+                </div>
+                <div class="admin-dock-actions">
+                    <button class="btn-dock-toggle" id="toggleAdminViewBtn">
+                        <span id="toggleAdminIcon">▼</span> Свернуть реестр
+                    </button>
+                </div>
             </div>
-            <div class="top-contacts">
-                <a href="tel:+79990000000" class="top-link">Экстренный выезд: +7 (999) 000-00-00</a>
-                <span class="divider">/</span>
-                <span class="mono-text">service@nikbowling.ru</span>
+
+            <div class="admin-dock-content" id="adminOrdersBody">
+                <div class="admin-orders-grid" id="adminOrdersList">
+                    <!-- Заявки генерируются через script.js -->
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Шапка сайта -->
+    <!-- ШАПКА САЙТА -->
     <header class="header">
         <div class="container header-content">
             <a href="#" class="logo">
-                <div class="logo-mark">NB</div>
-                <div class="logo-text">
-                    <span class="logo-name">NIK<strong>BOWLING</strong></span>
-                    <span class="logo-desc">Инжиниринг и сервис</span>
+                <div class="logo-box">NB</div>
+                <div class="logo-text-group">
+                    <span class="logo-brand">NIK<strong>BOWLING</strong></span>
+                    <span class="logo-sub">Engineering & Technical Service</span>
                 </div>
             </a>
+
             <nav class="nav">
-                <a href="#services" class="nav-link">Узлы оборудования</a>
-                <a href="#brands" class="nav-link">Бренды</a>
-                <a href="#workflow" class="nav-link">Регламент</a>
-                <a href="#request" class="nav-link">Заявка</a>
+                <a href="#services" class="nav-item">Узлы оборудования</a>
+                <a href="#brands" class="nav-item">Бренды</a>
+                <a href="#request" class="nav-item">Оставить заявку</a>
             </nav>
-            <a href="#request" class="btn btn-primary btn-glow">Вызвать инженера</a>
+
+            <!-- Блок профиля и кнопки входа -->
+            <div class="header-auth">
+                <button class="btn btn-auth" id="openAuthModalBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Войти в кабинет</span>
+                </button>
+
+                <div class="user-pill" id="userProfileMenu" style="display: none;">
+                    <div class="user-pill-avatar" id="userAvatarText">К</div>
+                    <div class="user-pill-info">
+                        <span class="user-pill-name" id="userDisplayName">Пользователь</span>
+                        <span class="user-pill-role" id="userRoleBadge">Клиент</span>
+                    </div>
+                    <button class="btn-pill-action" id="clientOrdersBtn" style="display: none;">
+                        Заявки (<span id="clientOrdersCount">0</span>)
+                    </button>
+                    <button class="btn-pill-logout" id="logoutBtn" title="Выйти из аккаунта">✕</button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -57,52 +86,40 @@
         <!-- Главный экран (Hero) -->
         <section class="hero">
             <div class="container">
-                <div class="hero-badge reveal">
-                    <span class="badge-tag">ENGINEERING SERVICE</span>
-                    <span class="badge-text">Превентивная диагностика и ремонт 24/7</span>
+                <div class="hero-tag reveal">
+                    <span class="tag-dot"></span>
+                    <span>Инженерная служба быстрого реагирования</span>
                 </div>
 
-                <h1 class="hero-title reveal">
-                    Точная механика.<br>
-                    <span>Стабильная работа</span> дорожек.
+                <h1 class="hero-heading reveal">
+                    Промышленный сервис.<br>
+                    <span>Безаварийная работа</span> боулинг-центров.
                 </h1>
 
-                <p class="hero-lead reveal">
-                    Боулинг — это сложная прецизионная система. Мы устраняем критические неисправности, выполняем тонкую настройку пинсеттеров и продлеваем ресурс оборудования без коммерческих простоев.
+                <p class="hero-description reveal">
+                    Полный регламент обслуживания пинсеттеров, систем возврата шаров, скоринг-электроники и синтетического полотна дорожек. Мгновенная фиксация поломок в системе диспетчеризации.
                 </p>
 
-                <div class="hero-actions reveal">
-                    <a href="#request" class="btn btn-primary btn-lg btn-glow">Заказать выездной аудит</a>
-                    <a href="#services" class="btn btn-secondary btn-lg">Карта техобслуживания</a>
+                <div class="hero-btns reveal">
+                    <a href="#request" class="btn btn-primary btn-glow">Подать заявку на ТО</a>
+                    <a href="#services" class="btn btn-secondary">Каталог оборудования</a>
                 </div>
 
-                <!-- Метрики с анимированным счетчиком -->
-                <div class="specs-grid reveal">
-                    <div class="spec-card">
-                        <div class="spec-num-wrap">
-                            <span class="spec-num" data-target="24">0</span>
-                            <span class="spec-unit">/7</span>
-                        </div>
-                        <div class="spec-title">Экстренное реагирование</div>
-                        <div class="spec-text">Выезд дежурного инженера при остановках дорожек</div>
+                <div class="stats-row reveal">
+                    <div class="stat-card">
+                        <div class="stat-digit"><span class="spec-num" data-target="24">0</span><span class="stat-unit">/7</span></div>
+                        <div class="stat-title">Экстренный выезд</div>
+                        <div class="stat-sub">Ликвидация сбоев в часы коммерческой загрузки</div>
                     </div>
-
-                    <div class="spec-card">
-                        <div class="spec-num-wrap">
-                            <span class="spec-num" data-target="99">0</span>
-                            <span class="spec-unit">.8%</span>
-                        </div>
-                        <div class="spec-title">Аптайм дорожек</div>
-                        <div class="spec-text">Средний показатель непрерывной работы центров на контракте</div>
+                    <div class="stat-card">
+                        <div class="stat-digit"><span class="spec-num" data-target="99">0</span><span class="stat-unit">.9%</span></div>
+                        <div class="stat-title">Аптайм дорожек</div>
+                        <div class="stat-sub">Коэффициент готовности у клубов на контракте</div>
                     </div>
-
-                    <div class="spec-card">
-                        <div class="spec-num-wrap">
-                            <span class="spec-num" data-target="100">0</span>
-                            <span class="spec-unit">%</span>
-                        </div>
-                        <div class="spec-title">Соблюдение карт ТО</div>
-                        <div class="spec-text">Оригинальные протоколы и технические карты производителей</div>
+                    <div class="stat-card">
+                        <div class="stat-digit"><span class="spec-num" data-target="100">0</span><span class="stat-unit">%</span></div>
+                        <div class="stat-title">Технические карты</div>
+                        <div class="stat-sub">Соблюдение заводских стандартов производителей</div>
                     </div>
                 </div>
             </div>
@@ -111,91 +128,87 @@
         <!-- Направления ТО -->
         <section class="section" id="services">
             <div class="container">
-                <div class="section-header reveal">
-                    <span class="section-tag">SERVICES & HARDWARE</span>
+                <div class="section-title-wrap reveal">
+                    <span class="section-kicker">SERVICES & HARDWARE</span>
                     <h2>Регламент обслуживания ключевых узлов</h2>
                     <p>Комплексная работа с механикой, гидравликой, оптикой и программным обеспечением.</p>
                 </div>
 
                 <div class="services-grid">
-                    <!-- Карточка 1 -->
-                    <div class="service-card glow-card reveal">
-                        <div class="card-header">
-                            <span class="card-num">01 / PINSETTERS</span>
-                            <div class="card-status active">Ready</div>
+                    <div class="service-card reveal">
+                        <div class="card-top">
+                            <span class="card-index">01 / PINSETTERS</span>
+                            <span class="card-status-pill">АКТИВНО</span>
                         </div>
                         <h3>Пинсеттеры и пинспоттеры</h3>
-                        <p>Калибровка временных фаз циклов, юстировка стопоров, замена натяжителей, переборка редукторов и устранение застреваний кеглей.</p>
-                        <div class="card-footer-tags">
-                            <span>Brunswick A-2 / GSX</span>
+                        <p>Калибровка фаз циклов, замена натяжителей цепей, переборка редукторов, настройка стопоров и предотвращение застреваний кеглей.</p>
+                        <div class="card-tags">
+                            <span>Brunswick GSX / A-2</span>
                             <span>QubicaAMF 82-90</span>
                             <span>String Machines</span>
                         </div>
                     </div>
 
-                    <!-- Карточка 2 -->
-                    <div class="service-card glow-card reveal">
-                        <div class="card-header">
-                            <span class="card-num">02 / BALL RETURN</span>
-                            <div class="card-status active">Ready</div>
+                    <div class="service-card reveal">
+                        <div class="card-top">
+                            <span class="card-index">02 / BALL RETURN</span>
+                            <span class="card-status-pill">АКТИВНО</span>
                         </div>
                         <h3>Системы возврата шаров</h3>
-                        <p>Настройка шароподъемников (Ball Lift), роликовых треков, чистка ремней ускорения, устранение дефектов, вызывающих сколы на шарах.</p>
-                        <div class="card-footer-tags">
+                        <p>Наладка шароподъемников (Ball Lift), роликовых путей, чистка ремней ускорения, устранение дефектов, вызывающих сколы и повреждения шаров.</p>
+                        <div class="card-tags">
+                            <span>Подъемники</span>
                             <span>Оптодатчики</span>
                             <span>Демпферы</span>
-                            <span>Электромоторы</span>
                         </div>
                     </div>
 
-                    <!-- Карточка 3 -->
-                    <div class="service-card glow-card reveal">
-                        <div class="card-header">
-                            <span class="card-num">03 / LANE CARE</span>
-                            <div class="card-status active">Ready</div>
+                    <div class="service-card reveal">
+                        <div class="card-top">
+                            <span class="card-index">03 / LANE CARE</span>
+                            <span class="card-status-pill">АКТИВНО</span>
                         </div>
                         <h3>Дорожки и кондиционирование</h3>
-                        <p>Обслуживание и калибровка машин нанесения масла, настройка паттернов, инспекция замковых соединений панелей и фол-линий.</p>
-                        <div class="card-footer-tags">
+                        <p>Обслуживание и калибровка машин нанесения масла, расчет диаграмм распределения, инспекция замковых соединений синтетических панелей.</p>
+                        <div class="card-tags">
                             <span>Kegel Kustodian</span>
                             <span>Brunswick Envoy</span>
                             <span>Геометрия</span>
                         </div>
                     </div>
 
-                    <!-- Карточка 4 -->
-                    <div class="service-card glow-card reveal">
-                        <div class="card-header">
-                            <span class="card-num">04 / SCORING & IT</span>
-                            <div class="card-status active">Ready</div>
+                    <div class="service-card reveal">
+                        <div class="card-top">
+                            <span class="card-index">04 / SCORING & IT</span>
+                            <span class="card-status-pill">АКТИВНО</span>
                         </div>
                         <h3>Скоринг и электроника</h3>
-                        <p>Диагностика оптических камер фиксации, ремонт плат управления, настройка серверов скоринга и интерфейсов ресепшена.</p>
-                        <div class="card-footer-tags">
+                        <p>Диагностика оптических камер фиксации кеглей, ремонт контроллеров TMS, настройка серверов скоринга и интерфейсов ресепшена.</p>
+                        <div class="card-tags">
                             <span>Conqueror</span>
                             <span>Vector Plus</span>
-                            <span>TMS Контроллеры</span>
+                            <span>TMS Серверы</span>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Бренды оборудования -->
-        <section class="section section-brands" id="brands">
+        <!-- Бренды -->
+        <section class="section section-dark" id="brands">
             <div class="container">
-                <div class="section-header reveal">
-                    <span class="section-tag">COMPATIBILITY</span>
+                <div class="section-title-wrap reveal">
+                    <span class="section-kicker">COMPATIBILITY</span>
                     <h2>Поддерживаемое оборудование</h2>
                 </div>
 
-                <div class="brands-marquee reveal">
-                    <div class="brand-pill"><span>BRUNSWICK</span></div>
-                    <div class="brand-pill"><span>QUBICA AMF</span></div>
-                    <div class="brand-pill"><span>KEGEL</span></div>
-                    <div class="brand-pill"><span>VIA BOWLING</span></div>
-                    <div class="brand-pill"><span>STELTRONIC</span></div>
-                    <div class="brand-pill"><span>SWITCH</span></div>
+                <div class="brands-grid reveal">
+                    <div class="brand-item">BRUNSWICK</div>
+                    <div class="brand-item">QUBICA AMF</div>
+                    <div class="brand-item">KEGEL</div>
+                    <div class="brand-item">VIA BOWLING</div>
+                    <div class="brand-item">STELTRONIC</div>
+                    <div class="brand-item">SWITCH</div>
                 </div>
             </div>
         </section>
@@ -203,67 +216,59 @@
         <!-- Форма заявки -->
         <section class="section" id="request">
             <div class="container">
-                <div class="form-wrapper reveal">
-                    <div class="form-info">
-                        <span class="section-tag">DISPATCHER</span>
-                        <h2>Оформить вызов инженерной службы</h2>
-                        <p>Укажите параметры боулинг-центра и характер неисправности. Дежурный инженер зафиксирует задачу и свяжется для согласования выезда.</p>
+                <div class="form-box reveal">
+                    <div class="form-box-side">
+                        <span class="section-kicker">DISPATCH DESK</span>
+                        <h2>Оформить заявку в реестр ТО</h2>
+                        <p>Заполните параметры клуба. Заявка мгновенно передается в единый журнал дежурного инженера.</p>
 
-                        <div class="tech-log">
-                            <div class="log-row">
-                                <span class="log-label">Статус приема заявок:</span>
-                                <span class="log-val text-green">АКТИВЕН</span>
+                        <div class="status-summary-card">
+                            <div class="summary-line">
+                                <span>Текущий статус:</span>
+                                <strong class="text-amber" id="formUserIndicator">Гость (вход не выполнен)</strong>
                             </div>
-                            <div class="log-row">
-                                <span class="log-label">Среднее время ответа:</span>
-                                <span class="log-val">до 15 минут</span>
-                            </div>
-                            <div class="log-row">
-                                <span class="log-label">Телефон диспетчера:</span>
-                                <span class="log-val">+7 (999) 000-00-00</span>
+                            <div class="summary-line">
+                                <span>Канал передачи:</span>
+                                <strong class="text-green">Штатный реестр ТО</strong>
                             </div>
                         </div>
                     </div>
 
-                    <form class="tech-form" id="orderForm">
-                        <div class="input-group">
-                            <label for="company">Название боулинг-центра / Город</label>
-                            <input type="text" id="company" required placeholder="РК «Олимп», Санкт-Петербург">
+                    <form class="main-form" id="orderForm">
+                        <div class="form-field">
+                            <label for="company">Боулинг-центр / Город</label>
+                            <input type="text" id="company" required placeholder="Например: РК «Арена», г. Москва">
                         </div>
 
-                        <div class="form-grid-2">
-                            <div class="input-group">
+                        <div class="form-row-2">
+                            <div class="form-field">
                                 <label for="phone">Номер телефона</label>
                                 <input type="tel" id="phone" required placeholder="+7 (___) ___-__-__">
                             </div>
-
-                            <div class="input-group">
-                                <label for="lanes">Количество дорожек</label>
+                            <div class="form-field">
+                                <label for="lanes">Дорожек в клубе</label>
                                 <input type="number" id="lanes" value="8" min="1" max="64">
                             </div>
                         </div>
 
-                        <div class="input-group">
+                        <div class="form-field">
                             <label for="equipment">Модель пинсеттеров</label>
                             <select id="equipment">
-                                <option value="brunswick-gs">Brunswick GS-Series (GS-98, GS-X)</option>
-                                <option value="brunswick-a2">Brunswick A-2</option>
-                                <option value="amf-82">QubicaAMF 82-70 / 82-90</option>
-                                <option value="string">Струнные пинсеттеры (Edge String и др.)</option>
-                                <option value="other">Другая система</option>
+                                <option value="Brunswick GS-Series">Brunswick GS-Series (GS-98, GS-X)</option>
+                                <option value="Brunswick A-2">Brunswick A-2</option>
+                                <option value="QubicaAMF 82-90">QubicaAMF 82-70 / 82-90</option>
+                                <option value="Струнные машины (Edge)">Струнные пинсеттеры (Edge String и др.)</option>
+                                <option value="Другое оборудование">Другой производитель</option>
                             </select>
                         </div>
 
-                        <div class="input-group">
-                            <label for="task">Описание поломки или регламента</label>
-                            <textarea id="task" rows="3" placeholder="Например: периодические сбои при подъеме шара на 3-й и 4-й дорожках..."></textarea>
+                        <div class="form-field">
+                            <label for="task">Описание поломки или задачи</label>
+                            <textarea id="task" rows="3" required placeholder="Опишите симптомы неисправности или дату для планового выезда..."></textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-block btn-glow">
                             <span>Зарегистрировать заявку</span>
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
                         </button>
                     </form>
                 </div>
@@ -271,14 +276,118 @@
         </section>
     </main>
 
+    <!-- МОДАЛЬНОЕ ОКНО АВТОРИЗАЦИИ (ВХОД / ДЕМО) -->
+    <div class="modal-layer" id="authModal">
+        <div class="modal-box">
+            <button class="modal-exit-btn" id="closeAuthModalBtn">✕</button>
+            <div class="modal-head">
+                <h3>Вход в систему NIKBOWLING</h3>
+                <p>Выберите профиль для проверки функций или введите произвольные данные</p>
+            </div>
+
+            <div class="demo-select-box">
+                <span class="demo-label">Быстрый тестовый вход в 1 клик:</span>
+                <div class="demo-btn-grid">
+                    <button class="btn-demo-card" id="demoAdminBtn">
+                        <div class="demo-card-icon admin-icon">⚡</div>
+                        <div>
+                            <strong>Инженер / Диспетчер</strong>
+                            <span>Доступ к верхней панели управления</span>
+                        </div>
+                    </button>
+                    <button class="btn-demo-card" id="demoClientBtn">
+                        <div class="demo-card-icon client-icon">🏢</div>
+                        <div>
+                            <strong>Клиент (РК «Арена»)</strong>
+                            <span>Отправка и отслеживание своих заявок</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-hr"><span>или произвольный логин</span></div>
+
+            <form id="customAuthForm" class="auth-fields">
+                <div class="form-field">
+                    <label for="authName">Имя / Название заведения</label>
+                    <input type="text" id="authName" placeholder="Например: Боулинг-центр «Шар»" required>
+                </div>
+                <div class="form-field">
+                    <label for="authRole">Роль пользователя</label>
+                    <select id="authRole">
+                        <option value="client">Клиент (Представитель клуба)</option>
+                        <option value="admin">Инженер / Администратор ТО</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 8px;">Войти</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО: ЗАЯВКИ КЛИЕНТА -->
+    <div class="modal-layer" id="clientOrdersModal">
+        <div class="modal-box modal-wide">
+            <button class="modal-exit-btn" id="closeClientOrdersBtn">✕</button>
+            <div class="modal-head">
+                <h3>История ваших заявок на обслуживание</h3>
+                <p>Текущий статус рассмотрения и примечания дежурной службы</p>
+            </div>
+            <div class="client-orders-scroll" id="clientOrdersList">
+                <!-- Генерируется через script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ЧАТ ПОДДЕРЖКИ -->
+    <div class="chat-widget" id="chatWidget">
+        <button class="chat-toggle-btn" id="chatToggleBtn" type="button" aria-label="Открыть чат поддержки">
+            <span class="chat-badge">1</span>
+            <svg class="icon-chat" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span class="icon-close">✕</span>
+        </button>
+
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <div class="chat-person">
+                    <div class="chat-avatar">NB<span class="online-indicator"></span></div>
+                    <div>
+                        <div class="chat-name">Инженер NIKBOWLING</div>
+                        <div class="chat-desc">Дежурная служба на связи</div>
+                    </div>
+                </div>
+                <button class="chat-close" id="chatCloseBtn" type="button">✕</button>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message msg-bot">
+                    <div class="msg-bubble">Здравствуйте! Чем помочь по работе оборудования боулинг-центра?</div>
+                    <span class="msg-time">Только что</span>
+                </div>
+            </div>
+
+            <div class="chat-quick-replies" id="quickReplies">
+                <button type="button" class="quick-btn" data-text="Срочный ремонт (остановка дорожки)">🚨 Срочный ремонт</button>
+                <button type="button" class="quick-btn" data-text="Сколько стоит плановое ТО?">💰 Стоимость ТО</button>
+                <button type="button" class="quick-btn" data-text="Как вызвать инженера на аудит?">🛠️ Выезд инженера</button>
+            </div>
+
+            <form class="chat-input-row" id="chatForm">
+                <input type="text" id="chatInput" placeholder="Опишите вопрос..." autocomplete="off">
+                <button type="submit" class="chat-send-btn" aria-label="Отправить">➤</button>
+            </form>
+        </div>
+    </div>
+
     <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-left">
-                <span class="logo-name">NIK<strong>BOWLING</strong></span>
+        <div class="container footer-row">
+            <div class="footer-copy">
+                <span class="logo-brand">NIK<strong>BOWLING</strong></span>
                 <p>Профессиональный инжиниринг, аудит и регламентное обслуживание боулинг-систем.</p>
             </div>
-            <div class="footer-right">
-                <span class="mono-text">© 2026 NIKBOWLING. All rights reserved.</span>
+            <div class="footer-meta">
+                <span>© 2026 NIKBOWLING. All rights reserved.</span>
             </div>
         </div>
     </footer>
