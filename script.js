@@ -4,7 +4,7 @@
 const CONFIG = {
     GOOGLE_TELEGRAM_GATEWAY: 'https://script.google.com/macros/s/AKfycbz_2AhoIOUHnYNP_8WhuoD2QOz4YyMXJkWYgWqlqoW-vUXOgOpxU779kBhcBHlHw2_U/exec',
     SUPABASE_URL: 'https://fdvgqonhlvonksbgfkez.supabase.co',
-    SUPABASE_ANON_KEY: 'sb_publishable_002Yn4Q0Xz...' 
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkdmdxb25obHZvbmtzYmdma2V6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MzkyNDEsImV4cCI6MjEwMzMxNTI0MX0.9ZUU-Zka9RbERVTzkeJW4_qcbSW7x9ITHbRnY8D6hS8' 
 };
 
 document.addEventListener('DOMContentLoaded', () => {
