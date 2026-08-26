@@ -2,11 +2,11 @@
  * NIKBOWLING — Инженерная служба
  */
 const CONFIG = {
-    GOOGLE_TELEGRAM_GATEWAY: 'https://script.google.com/macros/s/AKfycbx8hOmPuHONKmhKfD2J6Xg4ac0XzrYppRIXtnaNyKI48xV9_5K7NeQCFH1P9UrCieH4/exec',
-
+    GOOGLE_TELEGRAM_GATEWAY: 'https://script.google.com/macros/s/AKfycbz_2AhoIOUHnYNP_8WhuoD2QOz4YyMXJkWYgWqlqoW-vUXOgOpxU779kBhcBHlHw2_U/exec',
     SUPABASE_URL: 'https://fdvgqonhlvonksbgfkez.supabase.co',
-    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkdmdxb25obHZvbmtzYmdma2V6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MzkyNDEsImV4cCI6MjEwMzMxNTI0MX0.9ZUU-Zka9RbERVTzkeJW4_qcbSW7x9ITHbRnY8D6hS8'
+    SUPABASE_ANON_KEY: 'sb_publishable_002Yn4Q0Xz...' 
 };
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // ================= 1. БАЗА ДАННЫХ И ХРАНИЛИЩЕ =================
@@ -20,8 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const defaultUsers = [
-        { id: 'nikita', password: 'admin777', name: 'Никита', role: 'admin' },
-        { id: 'galaktika', password: '1234', name: 'Боулинг «Галактика»', role: 'client' }
+        { id: 'nikita', password: 'admin777', name: 'Никита', role: 'admin' }
     ];
 
     const getLocalUsers = () => {
@@ -96,8 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const authModal = document.getElementById('authModal');
     const closeAuthModalBtn = document.getElementById('closeAuthModalBtn');
-    const demoAdminBtn = document.getElementById('demoAdminBtn');
-    const demoClientBtn = document.getElementById('demoClientBtn');
     const authForm = document.getElementById('authForm');
     const authLogin = document.getElementById('authLogin');
     const authPassword = document.getElementById('authPassword');
@@ -165,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     .select('*')
                     .eq('id', login)
                     .eq('password', password)
-                    .single();
+                    .maybeSingle();
                 foundUser = data;
             }
 
@@ -182,16 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Неверный логин или пароль.');
             }
         }
-    });
-
-    demoAdminBtn.addEventListener('click', () => {
-        setCurrentUser({ id: 'nikita', name: 'Никита', role: 'admin' });
-        authModal.classList.remove('active');
-    });
-
-    demoClientBtn.addEventListener('click', () => {
-        setCurrentUser({ id: 'galaktika', name: 'Боулинг «Галактика»', role: 'client' });
-        authModal.classList.remove('active');
     });
 
     logoutBtn.addEventListener('click', () => setCurrentUser(null));
