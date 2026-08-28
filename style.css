@@ -37,6 +37,9 @@ html {
 }
 
 body {
+    width: 100%;
+    max-width: 100%;
+
     font-family: var(--font-sans);
     background-color: var(--bg-dark);
     color: var(--text-main);
@@ -1393,5 +1396,164 @@ body {
         flex-direction: column;
         gap: 12px;
         text-align: center;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/* ================= ПЛАВАЮЩАЯ КНОПКА-КЕГЛЯ (МОБИЛЬНАЯ) ================= */
+.mobile-pin-nav {
+    display: none; /* Скрыта на ПК */
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    z-index: 1200;
+}
+
+/* Кнопка-кегля */
+.pin-fab-btn {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1f293d 0%, #0e1420 100%);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 16px rgba(245, 158, 11, 0.35);
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+.pin-fab-btn:active {
+    transform: scale(0.92);
+}
+
+.pin-icon-wrap {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pin-svg {
+    width: 28px;
+    height: 28px;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+
+.pin-close-icon {
+    position: absolute;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-main);
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+}
+
+/* Анимация разворота кегли при открытии */
+.mobile-pin-nav.open .pin-fab-btn {
+    border-color: var(--red);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 16px rgba(239, 68, 68, 0.4);
+}
+
+.mobile-pin-nav.open .pin-svg {
+    transform: rotate(135deg) scale(0.4);
+    opacity: 0;
+}
+
+.mobile-pin-nav.open .pin-close-icon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+    color: var(--red);
+}
+
+/* Всплывающее меню */
+.mobile-nav-popup {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    width: 250px;
+    background: rgba(14, 19, 29, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-hover);
+    border-radius: 14px;
+    padding: 12px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85);
+    transform-origin: bottom right;
+    transform: scale(0.7) translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+}
+
+.mobile-pin-nav.open .mobile-nav-popup {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.mobile-popup-head {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    padding: 4px 8px 8px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+}
+
+.mobile-popup-links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mob-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.mob-link:hover, .mob-link:active {
+    background: var(--bg-card);
+    color: var(--accent);
+}
+
+.mob-link-cta {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: var(--accent);
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.mob-icon {
+    font-size: 15px;
+}
+
+/* Показываем кнопку на экранах шириной до 900px */
+@media (max-width: 900px) {
+    .mobile-pin-nav {
+        display: block;
     }
 }

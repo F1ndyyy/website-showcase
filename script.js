@@ -605,6 +605,36 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeAddNewsModalBtn) closeAddNewsModalBtn.addEventListener('click', () => addNewsModal.classList.remove('active'));
 
 
+
+    // ================= МОБИЛЬНАЯ КНОПКА-КЕГЛЯ =================
+    const mobilePinNav = document.getElementById('mobilePinNav');
+    const pinFabBtn = document.getElementById('pinFabBtn');
+    const mobLinks = document.querySelectorAll('.mob-link');
+
+    if (pinFabBtn && mobilePinNav) {
+        // Клик по кегле открывает/разворачивает меню
+        pinFabBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobilePinNav.classList.toggle('open');
+        });
+
+        // Закрытие при клике на любой пункт
+        mobLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobilePinNav.classList.remove('open');
+            });
+        });
+
+        // Закрытие при тапе в любое место вне меню
+        document.addEventListener('click', (e) => {
+            if (!mobilePinNav.contains(e.target)) {
+                mobilePinNav.classList.remove('open');
+            }
+        });
+    }
+
+
+
     loadDigest();
 
     renderUI();
