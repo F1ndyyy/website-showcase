@@ -235,6 +235,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             adminPanel.style.display = 'none';
         }
+
+        // 👈 ВОТ ЭТА СТРОЧКА: мгновенно обновляет права и кнопки в новостях без перезагрузки страницы
+        if (typeof renderDigest === 'function') {
+            renderDigest();
+        }
     }
 
     function renderAdminCards(orders) {
@@ -461,6 +466,146 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         statsObs.observe(statsSec);
     }
+
+    // ================= 10. ЖУРНАЛ И ДАЙДЖЕСТ =================
+    const newsGrid = document.getElementById('newsGrid');
+    const openAddNewsModalBtn = document.getElementById('openAddNewsModalBtn');
+    const addNewsModal = document.getElementById('addNewsModal');
+    const closeAddNewsModalBtn = document.getElementById('closeAddNewsModalBtn');
+    const addNewsForm = document.getElementById('addNewsForm');
+    const newsPills = document.querySelectorAll('.news-pill');
+
+    let digestPosts = [];
+    let currentNewsFilter = 'all';
+
+    async function loadDigest() {
+        if (!newsGrid) return;
+
+        if (supabaseClient) {
+            const { data } = await supabaseClient
+                .from('news')
+                .select('*')
+                .order('id', { ascending: false });
+            digestPosts = data || [];
+        } else {
+            digestPosts = [
+                {
+                    id: 1,
+                    title: 'Регламент проверки натяжителей цепей QubicaAMF 82-70',
+                    category: 'Механика',
+                    content: 'При плановом осмотре особое внимание уделяйте натяжению и смазке цепных приводов шасси. Своевременная регулировка предотвращает рассинхронизацию стола.',
+                    author: 'Никита (Глав.Инженер)',
+                    created_at: '28.08.2026'
+                },
+                {
+                    id: 2,
+                    title: 'Настройка сетевых модулей подсчета очков Steltronic',
+                    category: 'ПО Steltronic',
+                    content: 'Опубликована памятка по проверке заземления кабелей и калибровке оптики камер фиксации кеглей для бесперебойного подсчета очков.',
+                    author: 'Инженерная служба',
+                    created_at: '25.08.2026'
+                }
+            ];
+        }
+        renderDigest();
+    }
+
+    function renderDigest() {
+        if (!newsGrid) return;
+        const user = getCurrentUser();
+        const canManage = user && (user.role === 'admin' || user.role === 'smm');
+
+        if (openAddNewsModalBtn) {
+            openAddNewsModalBtn.style.display = canManage ? 'inline-flex' : 'none';
+        }
+
+        const filtered = currentNewsFilter === 'all' 
+            ? digestPosts 
+            : digestPosts.filter(p => p.category === currentNewsFilter);
+
+        newsGrid.innerHTML = '';
+
+        if (filtered.length === 0) {
+            newsGrid.innerHTML = '<div style="color: var(--text-dim); padding: 40px; text-align: center; grid-column: 1/-1;">В этой категории пока нет записей.</div>';
+            return;
+        }
+
+        filtered.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'digest-card';
+
+            let tagColor = 'var(--accent)';
+            if (item.category === 'Механика') tagColor = 'var(--red)';
+            if (item.category === 'ПО Steltronic') tagColor = 'var(--blue)';
+
+            card.style.setProperty('--card-accent', tagColor);
+
+            card.innerHTML = `
+                <div class="digest-card-top">
+                    <span class="digest-badge" style="color: ${tagColor}; background: ${tagColor}15; border: 1px solid ${tagColor}40;">${item.category}</span>
+                    <span class="digest-date">${item.created_at}</span>
+                </div>
+                <h3 class="digest-title">${item.title}</h3>
+                <p class="digest-content">${item.content}</p>
+                <div class="digest-footer">
+                    <span class="digest-author">👨‍🔧 ${item.author}</span>
+                    ${canManage ? `<button class="btn-digest-del" onclick="deleteDigestPost(${item.id})">Удалить</button>` : ''}
+                </div>
+            `;
+            newsGrid.appendChild(card);
+        });
+    }
+
+    newsPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            newsPills.forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            currentNewsFilter = pill.getAttribute('data-category');
+            renderDigest();
+        });
+    });
+
+    if (addNewsForm) {
+        addNewsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('newsTitle').value.trim();
+            const category = document.getElementById('newsCategory').value;
+            const author = document.getElementById('newsAuthor').value.trim();
+            const content = document.getElementById('newsContent').value.trim();
+
+            const dateStr = new Date().toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+            const newPost = { title, category, author, content, created_at: dateStr };
+
+            if (supabaseClient) {
+                await supabaseClient.from('news').insert([newPost]);
+            } else {
+                newPost.id = Date.now();
+                digestPosts.unshift(newPost);
+            }
+
+            addNewsForm.reset();
+            if (addNewsModal) addNewsModal.classList.remove('active');
+            await loadDigest();
+        });
+    }
+
+    window.deleteDigestPost = async (id) => {
+        if (confirm('Удалить эту заметку из журнала?')) {
+            if (supabaseClient) {
+                await supabaseClient.from('news').delete().eq('id', id);
+            } else {
+                digestPosts = digestPosts.filter(p => p.id !== id);
+            }
+            await loadDigest();
+        }
+    };
+
+    if (openAddNewsModalBtn) openAddNewsModalBtn.addEventListener('click', () => addNewsModal.classList.add('active'));
+    if (closeAddNewsModalBtn) closeAddNewsModalBtn.addEventListener('click', () => addNewsModal.classList.remove('active'));
+
+
+    loadDigest();
 
     renderUI();
 });

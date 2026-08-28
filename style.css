@@ -639,69 +639,124 @@ body {
 .brand-highlight {
     border-color: rgba(245, 158, 11, 0.4);
     background: rgba(245, 158, 11, 0.04);
-}
-
-/* ================= КАРТОЧКА ГЛАВНОГО ИНЖЕНЕРА ================= */
-.engineer-lead-card {
-    background: linear-gradient(180deg, rgba(239, 68, 68, 0.08) 0%, rgba(20, 27, 39, 0.8) 100%);
-    border: 1px solid rgba(239, 68, 68, 0.35);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 24px;
-    position: relative;
-}
-
-.engineer-role-tag {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--red);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-}
-
-.engineer-name-row {
-    font-size: 24px;
-    font-weight: 800;
-    margin-bottom: 14px;
-}
-
-.engineer-name-highlight {
-    color: #ef4444 !important;
-    text-shadow: 0 0 16px rgba(239, 68, 68, 0.4);
-    letter-spacing: 0.5px;
-}
-
-.engineer-direct-contacts {
+}/* ================= ОТДЕЛЬНАЯ ПЛАШКА КОНТАКТОВ ИНЖЕНЕРА ================= */
+.engineer-banner {
+    background: linear-gradient(135deg, rgba(20, 27, 39, 0.9) 0%, rgba(14, 19, 29, 0.95) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 16px;
+    padding: 36px 40px;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.contact-link {
+.engineer-banner-left {
     display: flex;
     align-items: center;
-    gap: 10px;
-    color: var(--text-main);
-    text-decoration: none;
+    gap: 24px;
+    max-width: 620px;
+}
+
+.engineer-avatar-badge {
+    position: relative;
+    width: 68px;
+    height: 68px;
+    background: var(--bg-card);
+    border: 2px solid var(--border-hover);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    flex-shrink: 0;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+}
+
+.engineer-status-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
+    background: var(--green);
+    border: 2px solid var(--bg-dark);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--green);
+}
+
+.engineer-banner-info h2 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.engineer-banner-info p {
+    color: var(--text-muted);
     font-size: 14px;
-    font-weight: 600;
-    padding: 8px 12px;
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
+    line-height: 1.5;
+}
+
+.engineer-banner-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 280px;
+}
+
+.contact-cta-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 18px;
     border-radius: var(--radius-sm);
-    transition: all 0.2s ease;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    background: var(--bg-dark);
+    transition: all 0.25s ease;
 }
 
-.contact-link:hover {
-    border-color: var(--red);
-    color: #fff;
-    transform: translateX(4px);
+.cta-icon {
+    font-size: 20px;
 }
 
-.telegram-link:hover {
+.cta-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+}
+
+.cta-text span {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.cta-text strong {
+    font-size: 15px;
+    color: var(--text-main);
+    font-family: var(--font-mono);
+}
+
+.phone-cta:hover {
+    border-color: var(--accent);
+    background: rgba(245, 158, 11, 0.08);
+    transform: translateY(-2px);
+}
+
+.phone-cta:hover .cta-text strong {
+    color: var(--accent);
+}
+
+.tg-cta:hover {
     border-color: var(--blue);
+    background: rgba(56, 189, 248, 0.08);
+    transform: translateY(-2px);
+}
+
+.tg-cta:hover .cta-text strong {
     color: var(--blue);
 }
 
@@ -921,4 +976,362 @@ body {
     .footer-row { flex-direction: column; gap: 16px; text-align: center; }
     .admin-orders-grid { grid-template-columns: 1fr; }
     .modal-box { padding: 24px; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* ================= ИНЖЕНЕРНЫЙ ДАЙДЖЕСТ (ГЛАВНАЯ) ================= */
+.news-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    gap: 20px;
+}
+
+.news-filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+}
+
+.news-pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 7px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.news-pill:hover {
+    color: var(--text-main);
+    border-color: var(--border-hover);
+}
+
+.news-pill.active {
+    background: var(--accent);
+    color: #070a0f;
+    font-weight: 700;
+    border-color: var(--accent);
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.25);
+}
+
+/* Сетка дайджеста */
+.digest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 24px;
+}
+
+.digest-card {
+    background: linear-gradient(180deg, rgba(20, 27, 39, 0.85) 0%, rgba(14, 19, 29, 0.95) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.digest-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--card-accent, var(--accent));
+}
+
+.digest-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--border-hover);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+.digest-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.digest-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.digest-date {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+}
+
+.digest-title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin-bottom: 12px;
+    color: var(--text-main);
+}
+
+.digest-content {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    flex-grow: 1;
+    margin-bottom: 20px;
+    white-space: pre-line;
+}
+
+.digest-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.digest-author {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-digest-del {
+    background: none;
+    border: none;
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.btn-digest-del:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .news-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .digest-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ================= СТРАНИЦА КАТАЛОГА ================= */
+
+/* Главный большой баннер архива */
+.catalog-hero-card {
+    background: linear-gradient(135deg, rgba(20, 27, 39, 0.95) 0%, rgba(14, 19, 29, 0.98) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    border-radius: 16px;
+    padding: 36px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 40px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(245, 158, 11, 0.1);
+}
+
+.catalog-hero-left {
+    max-width: 650px;
+}
+
+.catalog-file-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 800;
+    background: var(--accent);
+    color: #070a0f;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+
+.catalog-hero-left h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.catalog-hero-left p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.catalog-file-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+}
+
+.catalog-file-meta strong {
+    color: var(--text-main);
+}
+
+.btn-download-main {
+    padding: 14px 26px;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+/* Сетка отдельных документов */
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.catalog-item-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.catalog-item-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-hover);
+}
+
+.catalog-item-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.catalog-format-icon {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.pdf-icon { background: rgba(239, 68, 68, 0.15); color: var(--red); border: 1px solid rgba(239, 68, 68, 0.3); }
+.doc-icon { background: rgba(56, 189, 248, 0.15); color: var(--blue); border: 1px solid rgba(56, 189, 248, 0.3); }
+
+.catalog-category-tag {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+}
+
+.tag-amf { color: var(--red); }
+.tag-via { color: var(--blue); }
+.tag-stel { color: var(--accent); }
+.tag-service { color: var(--green); }
+
+.catalog-item-card h4 {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin-bottom: 10px;
+}
+
+.catalog-item-card p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    flex-grow: 1;
+    margin-bottom: 20px;
+}
+
+.catalog-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+}
+
+.file-size-info {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+}
+
+/* Нижний блок помощи */
+.catalog-help-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.help-box-content h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.help-box-content p {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+    .catalog-hero-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 24px;
+    }
+    .catalog-help-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

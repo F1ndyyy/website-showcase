@@ -52,6 +52,8 @@
             <nav class="nav">
                 <a href="#services" class="nav-item">Узлы оборудования</a>
                 <a href="#specialization" class="nav-item">Специализация</a>
+                <a href="#news" class="nav-item">Новости</a>
+                <a href="catalog.html" class="nav-item">Каталог</a>
                 <a href="#contacts" class="nav-item">Контакты инженера</a>
                 <a href="#request" class="nav-item">Оставить заявку</a>
             </nav>
@@ -218,46 +220,90 @@
             </div>
         </section>
 
-        <!-- Блок Главного Инженера и Форма -->
-        <section class="section" id="request">
+        <!-- БЛОК: ИНЖЕНЕРНЫЙ ДАЙДЖЕСТ И НОВОСТИ -->
+        <section class="section section-dark" id="news">
             <div class="container">
-                <div class="form-box reveal" id="contacts">
-                    <div class="form-box-side">
-                        <span class="section-kicker">ПРЯМОЙ КОНТАКТ</span>
-                        <h2>Техническая служба NIKBOWLING</h2>
-                        <p>По всем вопросам планового обслуживания, аварийных выездов и настройки систем подсчета очков Steltronic:</p>
+                <div class="news-section-header reveal">
+                    <div class="section-title-wrap" style="margin-bottom: 0;">
+                        <span class="section-kicker">LIVE ЖУРНАЛ СЛУЖБЫ</span>
+                        <h2>Инженерный дайджест & регламенты</h2>
+                        <p>Свежие технические заметки, разборы сбоев QubicaAMF/VIA и обновления ПО Steltronic.</p>
+                    </div>
 
-                        <!-- Карточка Главного Инженера -->
-                        <div class="engineer-lead-card">
-                            <div class="engineer-role-tag">Глав.Инженер</div>
-                            <div class="engineer-name-row">
-                                <span class="engineer-name-highlight">Никита</span>
-                            </div>
-                            <div class="engineer-direct-contacts">
-                                <a href="tel:+79852895450" class="contact-link">
-                                    <span class="contact-icon">📞</span>
-                                    <span>+7 985 289 54 50</span>
-                                </a>
-                                <a href="https://t.me/Yakovlevofficial1" target="_blank" rel="noopener" class="contact-link telegram-link">
-                                    <span class="contact-icon">✈️</span>
-                                    <span>Telegram: @Yakovlevofficial1</span>
-                                </a>
-                            </div>
+                    <div class="news-header-actions">
+                        <!-- Кнопка видна только админу/SMM -->
+                        <button class="btn btn-primary btn-sm" id="openAddNewsModalBtn" style="display: none;">
+                            + Написать заметку
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Фильтры категорий -->
+                <div class="news-filter-pills reveal">
+                    <button class="news-pill active" data-category="all">Все записи</button>
+                    <button class="news-pill" data-category="Механика">🔧 Механика Qubica/VIA</button>
+                    <button class="news-pill" data-category="ПО Steltronic">💻 ПО Steltronic</button>
+                    <button class="news-pill" data-category="Объявления">📢 Объявления</button>
+                </div>
+
+                <!-- Сетка карточек -->
+                <div class="digest-grid reveal" id="newsGrid">
+                    <div style="color: var(--text-dim); padding: 30px; text-align: center; grid-column: 1/-1;">Синхронизация записей...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ОТДЕЛЬНЫЙ БЛОК: ПРЯМАЯ СВЯЗЬ С ГЛАВНЫМ ИНЖЕНЕРОМ -->
+        <section class="section section-dark" id="contacts">
+            <div class="container">
+                <div class="engineer-banner reveal">
+                    <div class="engineer-banner-left">
+                        <div class="engineer-avatar-badge">
+                            <span class="engineer-avatar-icon">👨‍🔧</span>
+                            <span class="engineer-status-dot" title="На связи"></span>
                         </div>
-
-                        <div class="status-summary-card">
-                            <div class="summary-line">
-                                <span>Текущий профиль:</span>
-                                <strong class="text-amber" id="formUserIndicator">Гость (вход не выполнен)</strong>
-                            </div>
-                            <div class="summary-line">
-                                <span>Специализация:</span>
-                                <strong class="text-green">QubicaAMF • VIA • Steltronic</strong>
-                            </div>
+                        <div class="engineer-banner-info">
+                            <span class="section-kicker">ТЕХНИЧЕСКАЯ ПОДДЕРЖКА 24/7</span>
+                            <h2>Главный Инженер — <span class="engineer-name-highlight">Никита</span></h2>
+                            <p>Экстренные консультации при остановке дорожек, аварийные выезды и настройка подсчета очков Steltronic.</p>
                         </div>
                     </div>
 
-                    <form class="main-form" id="orderForm">
+                    <div class="engineer-banner-actions">
+                        <a href="tel:+79852895450" class="contact-cta-btn phone-cta">
+                            <span class="cta-icon">📞</span>
+                            <div class="cta-text">
+                                <span>Позвонить прямо сейчас</span>
+                                <strong>+7 985 289 54 50</strong>
+                            </div>
+                        </a>
+                        <a href="https://t.me/Yakovlevofficial1" target="_blank" rel="noopener" class="contact-cta-btn tg-cta">
+                            <span class="cta-icon">✈️</span>
+                            <div class="cta-text">
+                                <span>Написать в Telegram</span>
+                                <strong>@Yakovlevofficial1</strong>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ОТДЕЛЬНЫЙ БЛОК: ФОРМА ОФОРМЛЕНИЯ ЗАЯВКИ -->
+        <section class="section" id="request">
+            <div class="container">
+                <div class="order-form-wrapper reveal">
+                    <div class="order-form-header">
+                        <span class="section-kicker">ОНЛАЙН-РЕГИСТРАЦИЯ</span>
+                        <h2>Оформить заявку на ремонт или ТО</h2>
+                        <p>Заявка сразу отобразится в диспетчерской инженера и придет в Telegram-уведомлении.</p>
+                        <div class="current-user-status">
+                            <span>Текущий профиль: </span>
+                            <strong class="text-amber" id="formUserIndicator">Гость (вход не выполнен)</strong>
+                        </div>
+                    </div>
+
+                    <form class="main-form dedicated-form" id="orderForm">
                         <div class="form-field">
                             <label for="company">Боулинг-центр / Город</label>
                             <input type="text" id="company" required placeholder="Например: РК «Космос», г. Москва">
@@ -269,7 +315,7 @@
                                 <input type="tel" id="phone" required placeholder="+7 (___) ___-__-__">
                             </div>
                             <div class="form-field">
-                                <label for="lanes">Дорожек в клубе</label>
+                                <label for="lanes">Количество дорожек</label>
                                 <input type="number" id="lanes" value="8" min="1" max="64">
                             </div>
                         </div>
@@ -286,7 +332,7 @@
 
                         <div class="form-field">
                             <label for="task">Описание задачи или неисправности</label>
-                            <textarea id="task" rows="3" required placeholder="Опишите симптомы сбоя механики или вопрос по скорингу Steltronic..."></textarea>
+                            <textarea id="task" rows="3" required placeholder="Опишите симптомы сбоя механики, пинсеттера или скоринга..."></textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-block btn-glow" id="submitOrderBtn">
@@ -355,6 +401,48 @@
             </div>
         </div>
     </footer>
+
+    <!-- МОДАЛЬНОЕ ОКНО: ПУБЛИКАЦИЯ В ДАЙДЖЕСТ -->
+    <div class="modal-layer" id="addNewsModal">
+        <div class="modal-box modal-wide">
+            <button class="modal-exit-btn" id="closeAddNewsModalBtn">✕</button>
+            <div class="modal-head">
+                <h3>Новая публикация в журнал</h3>
+                <p>Запись сразу появится в блоке дайджеста на главной странице</p>
+            </div>
+
+            <form id="addNewsForm" class="auth-fields">
+                <div class="form-field">
+                    <label for="newsTitle">Заголовок темы</label>
+                    <input type="text" id="newsTitle" required placeholder="Например: Дефектовка демпферов шароподъемника">
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-field">
+                        <label for="newsCategory">Категория</label>
+                        <select id="newsCategory">
+                            <option value="Механика">Механика</option>
+                            <option value="ПО Steltronic">ПО Steltronic</option>
+                            <option value="Объявления">Объявления</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="newsAuthor">Автор</label>
+                        <input type="text" id="newsAuthor" required placeholder="Никита (Глав.Инженер)">
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="newsContent">Текст заметки</label>
+                    <textarea id="newsContent" rows="5" required placeholder="Опишите проблему, регламент или инструкцию..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-glow" id="submitNewsBtn">
+                    Опубликовать в дайджесте
+                </button>
+            </form>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
